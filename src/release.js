@@ -62,10 +62,10 @@ const prepareReleaseTasks = async (config, version) => {
 const runReleaseTasks = async (commands) => {
   const spinner = new Spinner("Starting release tasks...");
 
-  commands.forEach(async (command) => {
+  for (const command of commands) {
     spinner.text = command.name;
     await runCommand(command.action);
-  });
+  }
 
   spinner.succeed("Release task(s) complete!");
 };
