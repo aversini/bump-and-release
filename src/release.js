@@ -60,6 +60,7 @@ const prepareReleaseTasks = async (config, version) => {
 };
 
 const runReleaseTasks = async (commands) => {
+  let error = false;
   const spinner = new Spinner("Starting release tasks...");
 
   for (const command of commands) {
@@ -67,11 +68,13 @@ const runReleaseTasks = async (commands) => {
     try {
       await runCommand(command.action);
     } catch (e) {
-      spinner.fail(`Command ${command.name} failed:\n${e}`);
+      spinner.fail(e);
+      error = true;
     }
   }
-
-  spinner.succeed("Release task(s) complete!");
+  if (!error) {
+    spinner.succeed("Release task(s) complete!");
+  }
 };
 
 module.exports = async (config) => {
