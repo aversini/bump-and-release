@@ -118,8 +118,9 @@ module.exports = async (config) => {
   await runCommand(
     `git add -A && git commit -a -m "${config.bump.commitMessage(newVersion)}"`
   );
-  spinner.text = config.bump.local ? "Pushing to remote..." : "";
+
   if (!config.bump.local) {
+    spinner.text = "Pushing to remote...";
     await runCommand("git push --no-verify");
   }
 
