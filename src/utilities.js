@@ -2,7 +2,12 @@ const inquirer = require("inquirer");
 const kleur = require("kleur");
 const ora = require("ora");
 const util = require("util");
+const memoizeOne = require("async-memoize-one");
+const fs = require("fs-extra");
+const path = require("path");
 const exec = util.promisify(require("child_process").exec);
+
+const pkg = path.join(process.cwd(), "package.json");
 
 const ALLOWED_BRANCHES = ["master"];
 const ALLOWED_REMOTES = ["github/master"];
@@ -49,6 +54,17 @@ const displayErrorMessages = (errorMsg) => {
   }
 };
 
+const readPackageJSON = async () => {
+  let packageJson;
+  try {
+    packageJson = await fs.readJSON(pkg);
+    return packageJson;
+  } catch (err) {
+    throw new Error(kleur.red(`Unable to parse package.json\n${err}`));
+  }
+};
+const memoizedPackageJSON = memoizeOne(readPackageJSON);
+
 const runCommand = async (
   command,
   { std: std, ignoreError: ignoreError } = { std: false, ignoreError: false }
@@ -63,6 +79,11 @@ const runCommand = async (
       throw new Error(kleur.red(err));
     }
   }
+};
+
+const getCurrentVersion = async () => {
+  const packageJson = await memoizedPackageJSON();
+  return packageJson.version;
 };
 
 const preflightValidation = async (config) => {
@@ -81,6 +102,7 @@ const preflightValidation = async (config) => {
       ignoreError: true,
     }
   );
+  const version = await getCurrentVersion();
 
   const errorMessage = [];
 
@@ -105,6 +127,7 @@ const preflightValidation = async (config) => {
   return {
     branch,
     remote,
+    version,
   };
 };
 
@@ -112,6 +135,7 @@ module.exports = {
   displayConfirmation,
   displayErrorMessages,
   log,
+  memoizedPackageJSON,
   preflightValidation,
   runCommand,
   startSpinner,

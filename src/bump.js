@@ -1,32 +1,21 @@
 const fs = require("fs-extra");
 const inquirer = require("inquirer");
 const kleur = require("kleur");
-const memoizeOne = require("async-memoize-one");
-const path = require("path");
 const semver = require("semver");
+const path = require("path");
 
-const pkg = path.join(process.cwd(), "package.json");
 const pkgLock = path.join(process.cwd(), "package-lock.json");
+
 const {
   displayConfirmation,
   log,
+  memoizedPackageJSON,
   preflightValidation,
   startSpinner,
   runCommand,
 } = require("./utilities");
 
 const BUMP_TYPE_CUSTOM = "custom";
-
-const readPackageJSON = async () => {
-  let packageJson;
-  try {
-    packageJson = await fs.readJSON(pkg);
-    return packageJson;
-  } catch (err) {
-    throw new Error(kleur.red(`Unable to parse package.json\n${err}`));
-  }
-};
-const memoizeReadPackageJSON = memoizeOne(readPackageJSON);
 
 const updatePackageLockJSON = async (version) => {
   let packageLockJson;
@@ -41,9 +30,17 @@ const updatePackageLockJSON = async (version) => {
   }
 };
 
-const getCurrentVersion = async () => {
-  const packageJson = await memoizeReadPackageJSON();
-  return packageJson.version;
+const updatePackageJson = async (newVersion) => {
+  const packageJson = await memoizedPackageJSON();
+  packageJson.version = newVersion;
+  try {
+    await fs.writeJSON(pkg, packageJson, {
+      spaces: 2,
+    });
+    await updatePackageLockJSON(newVersion);
+  } catch (err) {
+    throw new Error(`Unable to update package.json\n${err}`);
+  }
 };
 
 const getNextPossibleVersions = ({ current, config }) => {
@@ -95,32 +92,18 @@ const promptForBumpType = async ({ current, config }) => {
   }
 };
 
-const updatePackageJson = async (newVersion) => {
-  const packageJson = await memoizeReadPackageJSON();
-  packageJson.version = newVersion;
-  try {
-    await fs.writeJSON(pkg, packageJson, {
-      spaces: 2,
-    });
-    await updatePackageLockJSON(newVersion);
-  } catch (err) {
-    throw new Error(`Unable to update package.json\n${err}`);
-  }
-};
-
 module.exports = async (config) => {
-  const { branch, remote } = await preflightValidation(config);
-  const current = await getCurrentVersion();
+  const { branch, remote, version } = await preflightValidation(config);
 
   log();
-  log(`Current version is ${kleur.cyan(current)}`);
+  log(`Current version is ${kleur.cyan(version)}`);
   log(`Current branch is ${kleur.cyan(branch)}`);
   log(`Current tracking remote is ${kleur.cyan(remote)}`);
   log();
 
-  const newVersion = await promptForBumpType({ current, config });
+  const newVersion = await promptForBumpType({ current: version, config });
   const goodToGo = await displayConfirmation(
-    `About to bump version from ${kleur.cyan(current)} to ${kleur.cyan(
+    `About to bump version from ${kleur.cyan(version)} to ${kleur.cyan(
       newVersion
     )}`
   );

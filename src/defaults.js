@@ -15,4 +15,7 @@ module.exports = {
       },
     ],
   },
+  release: {
+    prerelease: ["npm run test", "npm run changelog"],
+  },
 };
