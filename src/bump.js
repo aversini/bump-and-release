@@ -9,14 +9,12 @@ const pkg = path.join(process.cwd(), "package.json");
 const pkgLock = path.join(process.cwd(), "package-lock.json");
 const {
   displayConfirmation,
+  log,
   preflightValidation,
   startSpinner,
+  runCommand,
 } = require("./utilities");
 
-const BUMP_TYPE_RC = "rc";
-const BUMP_TYPE_PATCH = "patch";
-const BUMP_TYPE_MINOR = "minor";
-const BUMP_TYPE_MAJOR = "major";
 const BUMP_TYPE_CUSTOM = "custom";
 
 const readPackageJSON = async () => {
@@ -48,73 +46,52 @@ const getCurrentVersion = async () => {
   return packageJson.version;
 };
 
-const getNextPossibleVersions = (current) => ({
-  nextRC: semver.inc(current, "prerelease", "rc"),
-  nextPatch: semver.inc(current, "patch"),
-  nextMinor: semver.inc(current, "minor"),
-  nextMajor: semver.inc(current, "major"),
-});
+const getNextPossibleVersions = ({ current, config }) => {
+  const choices = [];
+  config.bump.nextPossible.forEach((next) => {
+    const nextVersion = semver.inc(current, next.type, next.identifier);
+    choices.push({
+      value: nextVersion,
+      short: next.type,
+      name: `[${next.type}] ... bump to ${nextVersion}`,
+    });
+  });
 
-const promptForBumpType = async (versions) => {
+  choices.push({
+    value: BUMP_TYPE_CUSTOM,
+    short: "custom",
+    name: "[custom] .. enter your own custom version",
+  });
+
+  return choices;
+};
+
+const promptForBumpType = async ({ current, config }) => {
+  const choices = getNextPossibleVersions({ current, config });
   const questions = {
     type: "list",
     name: "action",
-    message: "Please choose one of the following options for version",
-    default: BUMP_TYPE_MINOR,
-    choices: [
-      {
-        value: BUMP_TYPE_RC,
-        short: "rc",
-        name: `[rc] ...... bump to next RC (${versions.nextRC})`,
-      },
-      {
-        value: BUMP_TYPE_PATCH,
-        short: "patch",
-        name: `[patch] ... bump to next patch (${versions.nextPatch})`,
-      },
-      {
-        value: BUMP_TYPE_MINOR,
-        short: "minor",
-        name: `[minor] ... bump to next minor (${versions.nextMinor})`,
-      },
-      {
-        value: BUMP_TYPE_MAJOR,
-        short: "major",
-        name: `[major] ... bump to next major (${versions.nextMinor})`,
-      },
-      {
-        value: BUMP_TYPE_CUSTOM,
-        short: "custom",
-        name: "[custom] .. enter your own custom version",
-      },
-    ],
+    message: "Please choose one of the following options for the next version",
+    choices,
   };
 
   const answer = await inquirer.prompt(questions);
-  switch (answer.action) {
-    case BUMP_TYPE_RC:
-      return versions.nextRC;
-    case BUMP_TYPE_PATCH:
-      return versions.nextPatch;
-    case BUMP_TYPE_MINOR:
-      return versions.nextMinor;
-    case BUMP_TYPE_MAJOR:
-      return versions.nextMajor;
 
-    default: {
-      const newAnswer = await inquirer.prompt({
-        type: "input",
-        name: "version",
-        message: "Type a valid semver version",
-        validate(val) {
-          if (!val.length || !semver.valid(val)) {
-            return "Please enter a valid semver version, or <CTRL-C> to quit...";
-          }
-          return true;
-        },
-      });
-      return newAnswer.version;
-    }
+  if (answer.action === BUMP_TYPE_CUSTOM) {
+    const newAnswer = await inquirer.prompt({
+      type: "input",
+      name: "version",
+      message: "Type a valid semver version",
+      validate(val) {
+        if (!val.length || !semver.valid(val)) {
+          return "Please enter a valid semver version, or <CTRL-C> to quit...";
+        }
+        return true;
+      },
+    });
+    return newAnswer.version;
+  } else {
+    return answer.action;
   }
 };
 
@@ -131,21 +108,40 @@ const updatePackageJson = async (newVersion) => {
   }
 };
 
-module.exports = async () => {
-  await preflightValidation();
+module.exports = async (config) => {
+  const { branch, remote } = await preflightValidation(config);
   const current = await getCurrentVersion();
-  const newVersion = await promptForBumpType(getNextPossibleVersions(current));
+
+  log();
+  log(`Current version is ${kleur.cyan(current)}`);
+  log(`Current branch is ${kleur.cyan(branch)}`);
+  log(`Current tracking remote is ${kleur.cyan(remote)}`);
+  log();
+
+  const newVersion = await promptForBumpType({ current, config });
   const goodToGo = await displayConfirmation(
     `About to bump version from ${kleur.cyan(current)} to ${kleur.cyan(
       newVersion
     )}`
   );
 
-  if (goodToGo) {
-    const spinner = startSpinner("Updating package.json");
-    await updatePackageJson(newVersion);
-    setTimeout(() => {
-      spinner.stop();
-    }, 1000);
+  if (!goodToGo) {
+    log("Bye then!");
+    process.exit(0);
   }
+
+  const spinner = startSpinner("Updating package.json...");
+  await updatePackageJson(newVersion);
+  spinner.text = "Git stage and commit...";
+  await runCommand(
+    `git add -A && git commit -a -m "${config.bump.commitMessage(newVersion)}"`
+  );
+  spinner.text = config.bump.local ? "Pushing to remote..." : "";
+  if (!config.bump.local) {
+    await runCommand("git push --no-verify");
+  }
+
+  setTimeout(() => {
+    spinner.succeed("Version bump complete!");
+  }, 1000);
 };
