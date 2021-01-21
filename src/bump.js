@@ -10,7 +10,9 @@ const {
   displayConfirmation,
   log,
   memoizedPackageJSON,
+  pkg,
   preflightValidation,
+  shouldContinue,
   startSpinner,
   runCommand,
 } = require("./utilities");
@@ -108,10 +110,7 @@ module.exports = async (config) => {
     )}`
   );
 
-  if (!goodToGo) {
-    log("Bye then!");
-    process.exit(0);
-  }
+  shouldContinue(goodToGo);
 
   const spinner = startSpinner("Updating package.json...");
   await updatePackageJson(newVersion);

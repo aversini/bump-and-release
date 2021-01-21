@@ -16,6 +16,12 @@ module.exports = {
     ],
   },
   release: {
-    prerelease: ["npm run test", "npm run changelog"],
+    local: false,
+    commitMessage: (version) => `chore: tagging release ${version}`,
+    prerelease: [],
+    tag: {
+      enabled: true,
+      prefix: "v",
+    },
   },
 };

@@ -54,6 +54,13 @@ const displayErrorMessages = (errorMsg) => {
   }
 };
 
+const shouldContinue = (goodToGo) => {
+  if (!goodToGo) {
+    log("\nBye then!");
+    process.exit(0);
+  }
+};
+
 const readPackageJSON = async () => {
   let packageJson;
   try {
@@ -136,7 +143,9 @@ module.exports = {
   displayErrorMessages,
   log,
   memoizedPackageJSON,
+  pkg,
   preflightValidation,
   runCommand,
+  shouldContinue,
   startSpinner,
 };
