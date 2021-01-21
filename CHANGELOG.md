@@ -1,3 +1,12 @@
+## [0.1.3](https://github.com/aversini/bump-and-release/compare/v0.1.2...v0.1.3) (2021-01-21)
+
+
+### Bug Fixes
+
+* **release:** capitalize command name at the prompt ([863f4a3](https://github.com/aversini/bump-and-release/commit/863f4a38916295b82a8888a7df29d36c5c1b8dc1))
+
+
+
 ## [0.1.2](https://github.com/aversini/bump-and-release/compare/v0.1.1...v0.1.2) (2021-01-21)
 
 
