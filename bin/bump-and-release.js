@@ -17,6 +17,9 @@ const yargs = require("yargs")
       alias: "c",
       describe: "Configuration file",
     },
+    "dry-run": {
+      describe: "Do not run the commands",
+    },
   })
   .hide("version").argv;
 
@@ -28,6 +31,10 @@ const customCfg = yargs.config
   ? require(path.join(process.cwd(), yargs.config))
   : {};
 const config = merge(defaults, customCfg);
+
+if (yargs["dry-run"]) {
+  global["dry-run"] = true;
+}
 
 switch (yargs.type) {
   case "bump":

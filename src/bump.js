@@ -116,13 +116,28 @@ module.exports = async (config) => {
 
   await updatePackageJson(newVersion);
   spinner.text = "Git stage and commit...";
-  await runCommand(
-    `git add -A && git commit -a -m "${config.bump.commitMessage(newVersion)}"`
-  );
+
+  if (!global["dry-run"]) {
+    await runCommand(
+      `git add -A && git commit -a -m "${config.bump.commitMessage(
+        newVersion
+      )}"`
+    );
+  } else {
+    log(
+      `git add -A && git commit -a -m "${config.bump.commitMessage(
+        newVersion
+      )}"`
+    );
+  }
 
   if (!config.bump.local) {
-    spinner.text = "Pushing to remote...";
-    await runCommand("git push --no-verify");
+    if (!global["dry-run"]) {
+      spinner.text = "Pushing to remote...";
+      await runCommand("git push --no-verify");
+    } else {
+      log("git push --no-verify");
+    }
   }
 
   spinner.succeed("Version bump complete!");

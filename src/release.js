@@ -23,6 +23,7 @@ const prepareReleaseTasks = async (config, version) => {
       commands.push({
         action: task.command,
         name,
+        "dry-run": global["dry-run"],
       });
       names.push(name);
     });
@@ -32,12 +33,14 @@ const prepareReleaseTasks = async (config, version) => {
   commands.push({
     action: `git add -A`,
     name: stageMsg,
+    "dry-run": global["dry-run"],
   });
   names.push(stageMsg);
 
   commands.push({
     action: `git commit -a -m "${config.release.commitMessage(version)}"`,
     name: commitMsg,
+    "dry-run": global["dry-run"],
   });
   names.push(commitMsg);
 
@@ -47,6 +50,7 @@ const prepareReleaseTasks = async (config, version) => {
     commands.push({
       action: `git tag -a ${tagTask.prefix}${version} -m "version ${version}"`,
       name,
+      "dry-run": global["dry-run"],
     });
     names.push(name);
   }
@@ -55,6 +59,7 @@ const prepareReleaseTasks = async (config, version) => {
     commands.push({
       action: "git push --no-verify && git push --tags --no-verify",
       name: pushMsg,
+      "dry-run": global["dry-run"],
     });
     names.push(pushMsg);
   }
@@ -72,12 +77,16 @@ const runReleaseTasks = async (commands) => {
 
   for (const command of commands) {
     spinner.text =
-      command.name === pushMsg
+      command.name.toLowerCase() === pushMsg.toLowerCase()
         ? capitalize(command.name)
         : "Pushing to remote...";
     try {
       if (!error) {
-        await runCommand(command.action);
+        if (!global["dry-run"]) {
+          await runCommand(command.action);
+        } else {
+          log(command.action);
+        }
       }
     } catch (e) {
       /**
