@@ -24,14 +24,19 @@ const prepareReleaseTasks = async (config, version) => {
     });
   }
 
-  const stageAndCommitMsg = "git stage & commit";
+  const stageMsg = "git stage";
   commands.push({
-    action: `git add -A && git commit -a -m "${config.release.commitMessage(
-      version
-    )}"`,
-    name: stageAndCommitMsg,
+    action: `git add -A`,
+    name: stageMsg,
   });
-  names.push(stageAndCommitMsg);
+  names.push(stageMsg);
+
+  const commitMsg = "git commit";
+  commands.push({
+    action: `git commit -a -m "${config.release.commitMessage(version)}"`,
+    name: commitMsg,
+  });
+  names.push(commitMsg);
 
   const tagTask = config.release.tag;
   if (tagTask.enabled) {
@@ -68,7 +73,7 @@ const runReleaseTasks = async (commands) => {
     try {
       await runCommand(command.action);
     } catch (e) {
-      spinner.fail(e);
+      spinner.fail(`Command ${command.name} failed:\n${e}`);
       error = true;
     }
   }
