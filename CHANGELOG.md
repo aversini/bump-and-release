@@ -1,3 +1,12 @@
+## [0.2.1](https://github.com/aversini/bump-and-release/compare/v0.2.0...v0.2.1) (2021-01-21)
+
+
+### Bug Fixes
+
+* **release:** spinner for push should say "Pushing to remote..." ([ca4a1d5](https://github.com/aversini/bump-and-release/commit/ca4a1d51a6daae87bd36fe012881d8163ba01a9c))
+
+
+
 # [0.2.0](https://github.com/aversini/bump-and-release/compare/v0.1.3...v0.2.0) (2021-01-21)
 
 
