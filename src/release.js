@@ -77,7 +77,7 @@ const runReleaseTasks = async (commands) => {
 
   for (const command of commands) {
     spinner.text =
-      command.name.toLowerCase() === pushMsg.toLowerCase()
+      command.name.toLowerCase() !== pushMsg.toLowerCase()
         ? capitalize(command.name)
         : "Pushing to remote...";
     try {
