@@ -5,7 +5,7 @@ const {
   log,
   preflightValidation,
   shouldContinue,
-  startSpinner,
+  Spinner,
   runCommand,
 } = require("./utilities");
 
@@ -60,14 +60,14 @@ const prepareReleaseTasks = async (config, version) => {
 };
 
 const runReleaseTasks = async (commands) => {
-  const spinner = startSpinner("Starting release tasks...");
+  const spinner = new Spinner("Starting release tasks...");
+
   commands.forEach(async (command) => {
     spinner.text = command.name;
     await runCommand(command.action);
   });
-  setTimeout(() => {
-    spinner.succeed("Release task(s) complete!");
-  }, 1000);
+
+  spinner.succeed("Release task(s) complete!");
 };
 
 module.exports = async (config) => {

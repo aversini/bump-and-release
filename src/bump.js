@@ -13,7 +13,7 @@ const {
   pkg,
   preflightValidation,
   shouldContinue,
-  startSpinner,
+  Spinner,
   runCommand,
 } = require("./utilities");
 
@@ -112,7 +112,8 @@ module.exports = async (config) => {
 
   shouldContinue(goodToGo);
 
-  const spinner = startSpinner("Updating package.json...");
+  const spinner = new Spinner("Updating package.json...");
+
   await updatePackageJson(newVersion);
   spinner.text = "Git stage and commit...";
   await runCommand(
@@ -124,7 +125,5 @@ module.exports = async (config) => {
     await runCommand("git push --no-verify");
   }
 
-  setTimeout(() => {
-    spinner.succeed("Version bump complete!");
-  }, 1000);
+  spinner.succeed("Version bump complete!");
 };

@@ -9,10 +9,32 @@ const exec = util.promisify(require("child_process").exec);
 
 const pkg = path.join(process.cwd(), "package.json");
 
+const ONE_SECOND = 1000;
 const ALLOWED_BRANCHES = ["master"];
 const ALLOWED_REMOTES = ["github/master"];
 
 const startSpinner = (msg) => ora(msg).start();
+
+class Spinner {
+  constructor(msg) {
+    this.spinner = ora();
+    this.spinner.start(msg);
+  }
+
+  set text(msg) {
+    this.spinner.text = msg;
+  }
+
+  start(msg) {
+    this.spinner.start(msg);
+  }
+
+  succeed(msg) {
+    setTimeout(() => {
+      this.spinner.succeed(msg);
+    }, ONE_SECOND);
+  }
+}
 
 const log = (...args) => {
   // eslint-disable-next-line no-console
@@ -148,4 +170,5 @@ module.exports = {
   runCommand,
   shouldContinue,
   startSpinner,
+  Spinner,
 };
