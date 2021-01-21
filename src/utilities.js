@@ -45,6 +45,8 @@ const log = (...args) => {
   console.log(...args);
 };
 
+const capitalize = (str) => str[0].toUpperCase() + str.slice(1);
+
 const displayConfirmation = async (msg) => {
   const questions = {
     type: "confirm",
@@ -165,6 +167,7 @@ const preflightValidation = async (config) => {
 };
 
 module.exports = {
+  capitalize,
   displayConfirmation,
   displayErrorMessages,
   log,

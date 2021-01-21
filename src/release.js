@@ -1,6 +1,7 @@
 const kleur = require("kleur");
 
 const {
+  capitalize,
   displayConfirmation,
   log,
   preflightValidation,
@@ -10,6 +11,7 @@ const {
 } = require("./utilities");
 
 const commitMsg = "git commit";
+const pushMsg = "push";
 
 const prepareReleaseTasks = async (config, version) => {
   const tasks = config.release.prerelease;
@@ -50,12 +52,11 @@ const prepareReleaseTasks = async (config, version) => {
   }
 
   if (!config.release.local) {
-    const name = "push";
     commands.push({
       action: "git push --no-verify && git push --tags --no-verify",
-      name,
+      name: pushMsg,
     });
-    names.push(name);
+    names.push(pushMsg);
   }
 
   return {
@@ -70,7 +71,10 @@ const runReleaseTasks = async (commands) => {
   const spinner = new Spinner("Starting release tasks...");
 
   for (const command of commands) {
-    spinner.text = command.name;
+    spinner.text =
+      command.name === pushMsg
+        ? capitalize(command.name)
+        : "Pushing to remote...";
     try {
       if (!error) {
         await runCommand(command.action);
