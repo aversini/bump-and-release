@@ -9,6 +9,8 @@ const {
   runCommand,
 } = require("./utilities");
 
+const commitMsg = "git commit";
+
 const prepareReleaseTasks = async (config, version) => {
   const tasks = config.release.prerelease;
   const commands = [];
@@ -31,7 +33,6 @@ const prepareReleaseTasks = async (config, version) => {
   });
   names.push(stageMsg);
 
-  const commitMsg = "git commit";
   commands.push({
     action: `git commit -a -m "${config.release.commitMessage(version)}"`,
     name: commitMsg,
@@ -75,8 +76,16 @@ const runReleaseTasks = async (commands) => {
         await runCommand(command.action);
       }
     } catch (e) {
-      spinner.fail(`Command ${command.name} failed:\n${e}`);
-      error = true;
+      /**
+       * git commit will trip an error when there is
+       * nothing to commit... The message is roughly:
+       * "nothing to commit, working tree clean" but
+       * it's interpreted as an error... so bypassing it.
+       */
+      if (command.name !== commitMsg) {
+        spinner.fail(`Command ${command.name} failed:\n${e}`);
+        error = true;
+      }
     }
   }
 
