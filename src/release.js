@@ -64,7 +64,11 @@ const runReleaseTasks = async (commands) => {
 
   for (const command of commands) {
     spinner.text = command.name;
-    await runCommand(command.action);
+    try {
+      await runCommand(command.action);
+    } catch (e) {
+      spinner.fail(`Command ${command.name} failed:\n${e}`);
+    }
   }
 
   spinner.succeed("Release task(s) complete!");

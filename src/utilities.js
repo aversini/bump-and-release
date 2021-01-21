@@ -29,6 +29,10 @@ class Spinner {
     this.spinner.start(msg);
   }
 
+  fail(msg) {
+    this.spinner.fail(msg);
+  }
+
   succeed(msg) {
     setTimeout(() => {
       this.spinner.succeed(msg);
