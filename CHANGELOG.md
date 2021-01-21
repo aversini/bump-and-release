@@ -1,3 +1,12 @@
+# [0.2.0](https://github.com/aversini/bump-and-release/compare/v0.1.3...v0.2.0) (2021-01-21)
+
+
+### Features
+
+* adding support for "dry-run" ([b4afeca](https://github.com/aversini/bump-and-release/commit/b4afecaaf175d7dd8f460c7406ded3dcac8ee2cf))
+
+
+
 ## [0.1.3](https://github.com/aversini/bump-and-release/compare/v0.1.2...v0.1.3) (2021-01-21)
 
 ### Bug Fixes
