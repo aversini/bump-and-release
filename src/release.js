@@ -68,26 +68,17 @@ const runReleaseTasks = async (commands) => {
   let error = false;
   const spinner = new Spinner("Starting release tasks...");
 
-  /*
-   * for (const command of commands) {
-   *   spinner.text = command.name;
-   *   try {
-   *     await runCommand(command.action);
-   *   } catch (e) {
-   *     spinner.fail(`Command ${command.name} failed:\n${e}`);
-   *     error = true;
-   *   }
-   * }
-   */
-  await commands.reduce(async (command) => {
+  for (const command of commands) {
     spinner.text = command.name;
     try {
-      await runCommand(command.action);
+      if (!error) {
+        await runCommand(command.action);
+      }
     } catch (e) {
       spinner.fail(`Command ${command.name} failed:\n${e}`);
       error = true;
     }
-  });
+  }
 
   if (!error) {
     spinner.succeed("Release task(s) complete!");
