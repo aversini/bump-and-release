@@ -10,8 +10,6 @@ const exec = util.promisify(require("child_process").exec);
 const pkg = path.join(process.cwd(), "package.json");
 
 const ONE_SECOND = 1000;
-const ALLOWED_BRANCHES = ["master"];
-const ALLOWED_REMOTES = ["github/master"];
 
 const startSpinner = (msg) => ora(msg).start();
 
@@ -125,7 +123,7 @@ const preflightValidation = async (config) => {
   /*
    * Check if the current branch is allowed
    * Check if the current branch has a tracking remote
-   * Check if the repo is dirty (uncommited files)
+   * Check if the repo is dirty (uncommitted files)
    */
   const branch = await runCommand("git rev-parse --abbrev-ref HEAD");
   const remote = await runCommand(
@@ -141,14 +139,18 @@ const preflightValidation = async (config) => {
 
   const errorMessage = [];
 
-  if (!branch.includes(ALLOWED_BRANCHES)) {
+  if (!branch.includes(config.allowedBranches)) {
     errorMessage.push(
-      kleur.bold().red(`Working branch must be one of "${ALLOWED_BRANCHES}".`)
+      kleur
+        .bold()
+        .red(`Working branch must be one of "${config.allowedBranches}".`)
     );
   }
-  if (!remote.includes(ALLOWED_REMOTES)) {
+  if (!remote.includes(config.allowedRemotes)) {
     errorMessage.push(
-      kleur.bold().red(`Tracking remote must be one of "${ALLOWED_REMOTES}".`)
+      kleur
+        .bold()
+        .red(`Tracking remote must be one of "${config.allowedRemotes}".`)
     );
   }
   if (typeof dirty === "undefined" && !config.bump.local) {
