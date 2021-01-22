@@ -1,3 +1,12 @@
+# [0.3.0](https://github.com/aversini/bump-and-release/compare/v0.2.1...v0.3.0) (2021-01-22)
+
+
+### Features
+
+* allowed remotes and allowed branches are now configurable ([ac3c6a5](https://github.com/aversini/bump-and-release/commit/ac3c6a506fffdbdb0da5a121caff374ce25c008c))
+
+
+
 ## [0.2.1](https://github.com/aversini/bump-and-release/compare/v0.2.0...v0.2.1) (2021-01-21)
 
 
