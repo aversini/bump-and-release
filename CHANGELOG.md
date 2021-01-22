@@ -1,3 +1,18 @@
+# [0.4.0](https://github.com/aversini/bump-and-release/compare/v0.3.2...v0.4.0) (2021-01-22)
+
+
+### Features
+
+* **release:** adding support for verbose actions ([40ba29f](https://github.com/aversini/bump-and-release/commit/40ba29fd5aa17394e71fb68ead43136e3163cc38))
+
+
+### Reverts
+
+* Revert "chore: tagging release 0.3.1" ([2dabaf4](https://github.com/aversini/bump-and-release/commit/2dabaf4e2d41ef0853814b64591461cc1a9b97bb))
+* Revert "chore: tagging release 0.3.2" ([b9d3095](https://github.com/aversini/bump-and-release/commit/b9d3095ba8032f9b68e0831792904fe9e7ea0723))
+
+
+
 ## [0.3.1](https://github.com/aversini/bump-and-release/compare/v0.3.0...v0.3.1) (2021-01-22)
 
 
