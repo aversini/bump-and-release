@@ -19,8 +19,8 @@ Update your `package.json` file with the following scripts calls:
 
 ```json
 "scripts": {
-  "bump": "npm run bump-and-release -t bump",
-  "release": "npm run bump-and-release-t release"
+  "bump": "bump-and-release -t bump",
+  "release": "bump-and-release-t release"
 }
 ```
 
@@ -28,8 +28,8 @@ If you are using a configuration file, you need to pass it via the parameter `-c
 
 ```json
 "scripts": {
-  "bump": "npm run bump-and-release -t bump -c config.js",
-  "release": "npm run bump-and-release-t release -c config.js"
+  "bump": "bump-and-release -t bump -c config.js",
+  "release": "bump-and-release-t release -c config.js"
 }
 ```
 
