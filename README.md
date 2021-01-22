@@ -1,5 +1,9 @@
 # Bump and Release
 
+[![npm version](https://badge.fury.io/js/bump-and-release.svg)](https://badge.fury.io/js/bump-and-release)
+<a href="https://david-dm.org/aversini/bump-and-release"><img src="https://david-dm.org/aversini/bump-and-release.svg" alt="Dependency Status"></a>
+<a href="https://david-dm.org/aversini/bump-and-release/?type=dev"><img src="https://david-dm.org/aversini/bump-and-release/dev-status.svg" alt="devDependency Status"></a>
+
 > Bump and Release is a tiny command line helper to bump and release packages.
 
 ## Installation
