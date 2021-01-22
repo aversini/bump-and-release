@@ -161,8 +161,11 @@ module.exports = {
      * { array of objects }
      * List of tasks to run before the release is actually
      * tagged. It is useful to run some tests, or
-     * generate a changelog for example. Each object has 2
-     * keys: the name of the task, and the action to run.
+     * generate a changelog for example. Each object has 3
+     * keys: the name of the task, the action to run and
+     * and optional verbose boolean to indicate if the
+     * output of the task should be visible or not (it is
+     * not verbose by default).
      *
      * NOTES: any files modified during these steps will
      * automatically be staged, committed and pushed to the
@@ -172,6 +175,7 @@ module.exports = {
       {
         name: "run tests",
         command: "npm run test",
+        verbose: true,
       },
       {
         name: "generate changelog",

@@ -23,6 +23,7 @@ const prepareReleaseTasks = async (config, version) => {
       commands.push({
         action: task.command,
         name,
+        verbose: task.verbose ? task.verbose : false,
         "dry-run": global["dry-run"],
       });
       names.push(name);
@@ -81,11 +82,16 @@ const runReleaseTasks = async (commands) => {
         ? capitalize(command.name)
         : "Pushing to remote...";
     try {
-      if (!error) {
-        if (!global["dry-run"]) {
-          await runCommand(command.action);
+      if (command["dry-run"]) {
+        log(command.action);
+      } else if (!error) {
+        if (command.verbose) {
+          const { stdout } = await runCommand(command.action, {
+            verbose: true,
+          });
+          log(`\n${stdout}\n`);
         } else {
-          log(command.action);
+          await runCommand(command.action);
         }
       }
     } catch (e) {

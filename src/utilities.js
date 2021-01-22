@@ -100,11 +100,14 @@ const memoizedPackageJSON = memoizeOne(readPackageJSON);
 
 const runCommand = async (
   command,
-  { std: std, ignoreError: ignoreError } = { std: false, ignoreError: false }
+  { verbose: verbose, ignoreError: ignoreError } = {
+    verbose: false,
+    ignoreError: false,
+  }
 ) => {
   try {
     const { stdout, stderr } = await exec(command);
-    return std
+    return verbose
       ? { stdout: stdout.replace(/\n$/, ""), stderr }
       : stdout.replace(/\n$/, "");
   } catch (err) {
