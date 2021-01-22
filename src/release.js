@@ -23,7 +23,7 @@ const prepareReleaseTasks = async (config, version) => {
       commands.push({
         action: task.command,
         name,
-        // "dry-run": global["dry-run"],
+        "dry-run": global["dry-run"],
       });
       names.push(name);
     });
