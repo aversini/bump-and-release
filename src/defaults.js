@@ -1,6 +1,6 @@
 module.exports = {
   allowedBranches: ["master"],
-  allowedRemotes: ["github/master"],
+  allowedRemotes: ["github/master", "origin/master"],
   bump: {
     local: false,
     commitMessage: (version) =>
