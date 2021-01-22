@@ -154,7 +154,7 @@ const preflightValidation = async (config) => {
         .red(`Tracking remote must be one of "${config.allowedRemotes}".`)
     );
   }
-  if (typeof dirty === "uundefined" && !config.bump.local) {
+  if (typeof dirty === "undefined" && !config.bump.local) {
     errorMessage.push(
       kleur.bold().red("Working dir must be clean (no uncommited files).")
     );

@@ -1,6 +1,6 @@
 {
   "name": "bump-and-release",
-  "version": "0.3.2",
+  "version": "0.3.1",
   "license": "MIT",
   "author": "Arno Versini",
   "description": "A tiny command line helper to bump and release packages",
@@ -23,8 +23,7 @@
     "lint": "eslint --color \"./src/**/*.js\" \"./bin/**/*.js\"",
     "prettier:fix": "prettier --loglevel error --write \"{src/**/*.js,bin/**/*.js}\"",
     "prettier:all": "npm-run-all --serial prettier:fix lint:fix",
-    "release": "node ./bin/bump-and-release.js -t release -c \"./configuration/config.js\"",
-    "test": "ls -l src"
+    "release": "node ./bin/bump-and-release.js -t release -c \"./configuration/config.js\""
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^11.0.0",
