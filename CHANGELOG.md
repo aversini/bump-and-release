@@ -1,12 +1,3 @@
-## [0.3.2](https://github.com/aversini/bump-and-release/compare/v0.3.1...v0.3.2) (2021-01-22)
-
-
-### Reverts
-
-* Revert "chore: bumping version for next release: 0.3.2" ([7830f66](https://github.com/aversini/bump-and-release/commit/7830f66bfe8dbb72aa060bcc582e5d8eff343b6b))
-
-
-
 ## [0.3.1](https://github.com/aversini/bump-and-release/compare/v0.3.0...v0.3.1) (2021-01-22)
 
 
