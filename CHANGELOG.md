@@ -1,3 +1,13 @@
+## [0.3.1](https://github.com/aversini/bump-and-release/compare/v0.3.0...v0.3.1) (2021-01-22)
+
+
+### Bug Fixes
+
+* adding "origin" as a default allowed remote ([98d008d](https://github.com/aversini/bump-and-release/commit/98d008d6c3a30e26433eb946e3261b77dbc82ed0))
+* allowedBranches and allowedRemotes logic was broken for more than one ([9160e78](https://github.com/aversini/bump-and-release/commit/9160e786e763f89be4bdcb4677cd72a617e738d2))
+
+
+
 # [0.3.0](https://github.com/aversini/bump-and-release/compare/v0.2.1...v0.3.0) (2021-01-22)
 
 
