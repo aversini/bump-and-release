@@ -139,14 +139,15 @@ const preflightValidation = async (config) => {
 
   const errorMessage = [];
 
-  if (!branch.includes(config.allowedBranches)) {
+  if (!config.allowedBranches.includes(branch)) {
     errorMessage.push(
       kleur
         .bold()
         .red(`Working branch must be one of "${config.allowedBranches}".`)
     );
   }
-  if (!remote.includes(config.allowedRemotes)) {
+
+  if (!config.allowedRemotes.includes(remote)) {
     errorMessage.push(
       kleur
         .bold()
