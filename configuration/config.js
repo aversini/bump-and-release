@@ -1,4 +1,12 @@
 module.exports = {
+  bump: {
+    nextPossible: [
+      {
+        type: "minor",
+        default: true,
+      },
+    ],
+  },
   release: {
     prerelease: [
       {

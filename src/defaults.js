@@ -8,12 +8,22 @@ module.exports = {
     nextPossible: [
       {
         type: "patch",
+        prompt: (type, version) =>
+          `[${type}] ... bump to next ${type} (${version})`,
       },
       {
         type: "minor",
+        prompt: (type, version) =>
+          `[${type}] ... bump to next ${type} (${version})`,
       },
       {
         type: "major",
+        prompt: (type, version) =>
+          `[${type}] ... bump to next ${type} (${version})`,
+      },
+      {
+        type: "custom",
+        prompt: (type) => `[${type}] .. enter your own custom version`,
       },
     ],
   },

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const path = require("path");
-const merge = require("lodash.merge");
+const _ = require("lodash");
 const bump = require("../src/bump");
 const release = require("../src/release");
 const defaults = require("../src/defaults");
@@ -30,7 +30,15 @@ const yargs = require("yargs")
 const customCfg = yargs.config
   ? require(path.join(process.cwd(), yargs.config))
   : {};
-const config = merge(defaults, customCfg);
+
+const config = _.mergeWith(defaults, customCfg, (def, cust, key) => {
+  if (key === "nextPossible") {
+    return _.orderBy(
+      _.values(_.merge(_.keyBy(def, "type"), _.keyBy(cust, "type"))),
+      ["pos"]
+    );
+  }
+});
 
 if (yargs["dry-run"]) {
   global["dry-run"] = true;

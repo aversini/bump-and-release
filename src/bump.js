@@ -47,29 +47,37 @@ const updatePackageJson = async (newVersion) => {
 
 const getNextPossibleVersions = ({ current, config }) => {
   const choices = [];
+  let index = 0,
+    defaultChoice = 0;
   config.bump.nextPossible.forEach((next) => {
-    const nextVersion = semver.inc(current, next.type, next.identifier);
-    choices.push({
-      value: nextVersion,
-      short: next.type,
-      name: `[${next.type}] ... bump to ${nextVersion}`,
-    });
+    if (next.enabled || typeof next.enabled === "undefined") {
+      if (next.default) {
+        defaultChoice = index;
+      }
+      index++;
+      const nextVersion = semver.inc(current, next.type, next.identifier);
+      choices.push({
+        value: nextVersion,
+        short: next.type,
+        name: next.prompt
+          ? next.prompt(next.type, nextVersion)
+          : `[${next.type}] ... bump to ${nextVersion}`,
+      });
+    }
   });
 
-  choices.push({
-    value: BUMP_TYPE_CUSTOM,
-    short: "custom",
-    name: "[custom] .. enter your own custom version",
-  });
-
-  return choices;
+  return { choices, defaultChoice };
 };
 
 const promptForBumpType = async ({ current, config }) => {
-  const choices = getNextPossibleVersions({ current, config });
+  const { defaultChoice, choices } = getNextPossibleVersions({
+    current,
+    config,
+  });
   const questions = {
     type: "list",
     name: "action",
+    default: defaultChoice,
     message: "Please choose one of the following options for the next version",
     choices,
   };

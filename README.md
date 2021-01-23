@@ -111,20 +111,64 @@ module.exports = {
      * that are accepted from method `inc()` of the
      * node-semver library.
      * https://github.com/npm/node-semver
+     * There is also an extra one called "custom", allowing
+     * the user to enter a version manually.
      */
     nextPossible: [
       {
+        /**
+         * { string }
+         * The type of release as defined in node-semver.
+         * Possible values are major, premajor, minor,
+         * preminor, patch, prepatch, or prerelease.
+         */
         type: "prerelease",
+        /**
+         * { string }
+         * Identifier to be used to prefix premajor,
+         * preminor, prepatch or prerelease version
+         * increments.
+         * For example: "beta", "rc", etc.
+         */
         identifier: "beta",
+        /**
+         * { boolean }
+         * Flag to enable or disable a specific release.
+         */
+        enabled: true,
+        /**
+         * { boolean }
+         * Flag to make that particular version the default
+         * selection.
+         */
+        default: true,
+        /**
+         * { function }
+         * Function that returns the prompted line for a
+         * specific version.
+         */
+        prompt: (type, version) =>
+          `[${type}] ... bump to next ${type} (${version})`,
+        /**
+         * { number }
+         * The desired position for this specific release in
+         * the prompt.
+         */
       },
       {
         type: "patch",
+        prompt: (type, version) =>
+          `[${type}] ... bump to next ${type} (${version})`,
       },
       {
         type: "minor",
+        prompt: (type, version) =>
+          `[${type}] ... bump to next ${type} (${version})`,
       },
       {
         type: "major",
+        prompt: (type, version) =>
+          `[${type}] ... bump to next ${type} (${version})`,
       },
     ],
   },
