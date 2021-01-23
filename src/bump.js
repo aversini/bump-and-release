@@ -8,6 +8,7 @@ const pkgLock = path.join(process.cwd(), "package-lock.json");
 
 const {
   displayConfirmation,
+  displayIntroductionMessage,
   log,
   memoizedPackageJSON,
   pkg,
@@ -105,11 +106,7 @@ const promptForBumpType = async ({ current, config }) => {
 module.exports = async (config) => {
   const { branch, remote, version } = await preflightValidation(config);
 
-  log();
-  log(`Current version is ${kleur.cyan(version)}`);
-  log(`Current branch is ${kleur.cyan(branch)}`);
-  log(`Current tracking remote is ${kleur.cyan(remote)}`);
-  log();
+  displayIntroductionMessage({ version, branch, remote });
 
   const newVersion = await promptForBumpType({ current: version, config });
   const goodToGo = await displayConfirmation(

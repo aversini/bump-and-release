@@ -80,6 +80,18 @@ const displayErrorMessages = (errorMsg) => {
   }
 };
 
+const displayIntroductionMessage = ({ version, branch, remote }) => {
+  log();
+  log(`Current version is ${kleur.cyan(version)}`);
+  log(`Current branch is ${kleur.cyan(branch)}`);
+  log(`Current tracking remote is ${kleur.cyan(remote)}`);
+  log();
+  if (global["dry-run"]) {
+    log("Dry-run mode is ON");
+    log();
+  }
+};
+
 const shouldContinue = (goodToGo) => {
   if (!goodToGo) {
     log("\nBye then!");
@@ -176,6 +188,7 @@ module.exports = {
   capitalize,
   displayConfirmation,
   displayErrorMessages,
+  displayIntroductionMessage,
   log,
   memoizedPackageJSON,
   pkg,

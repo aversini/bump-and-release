@@ -1,8 +1,7 @@
-const kleur = require("kleur");
-
 const {
   capitalize,
   displayConfirmation,
+  displayIntroductionMessage,
   log,
   preflightValidation,
   shouldContinue,
@@ -116,11 +115,7 @@ const runReleaseTasks = async (commands) => {
 module.exports = async (config) => {
   const { branch, remote, version } = await preflightValidation(config);
 
-  log();
-  log(`Current version is ${kleur.cyan(version)}`);
-  log(`Current branch is ${kleur.cyan(branch)}`);
-  log(`Current tracking remote is ${kleur.cyan(remote)}`);
-  log();
+  displayIntroductionMessage({ version, branch, remote });
 
   const { instruction, commands } = await prepareReleaseTasks(config, version);
 
