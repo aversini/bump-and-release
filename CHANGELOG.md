@@ -1,3 +1,13 @@
+# [0.5.0](https://github.com/aversini/bump-and-release/compare/v0.4.0...v0.5.0) (2021-01-23)
+
+
+### Features
+
+* if dry-run mode is ON, add it to the introduction message ([af9d761](https://github.com/aversini/bump-and-release/commit/af9d761d50880d4bd7873b5f9778e2f640039cde))
+* **bump:** adding more customization for the "nextVersion" options ([0c050dc](https://github.com/aversini/bump-and-release/commit/0c050dc9e8cdd07947df4a6ebd58869154bdcb83))
+
+
+
 # [0.4.0](https://github.com/aversini/bump-and-release/compare/v0.3.2...v0.4.0) (2021-01-22)
 
 
