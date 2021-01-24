@@ -10,6 +10,7 @@ const {
   log,
   mergeConfigurations,
   preflightValidation,
+  prepareReleaseTasks,
   runCommand,
   shouldContinue,
   upperFirst,
@@ -22,6 +23,7 @@ const deepEqual = require("./helpers/deepEqual");
 let mockExit, spyExit, mockLog, spyLog, mockPrompt, spyPrompt;
 
 kleur.enabled = false;
+global["dry-run"] = true;
 
 describe("when testing for individual utilities wtih no logging side-effects", () => {
   it("should convert the first letter of a sentence to uppercase", async () => {
@@ -68,6 +70,10 @@ describe("when testing for individual utilities wtih no logging side-effects", (
     const config = {
       bump: {
         nextPossible: [
+          {
+            type: "prerelease",
+            enabled: false,
+          },
           {
             type: "patch",
             prompt: (type, version) =>
@@ -117,6 +123,198 @@ describe("when testing for individual utilities wtih no logging side-effects", (
     });
     expect(deepEqual(choices, expectedChoices)).toBe(true);
     expect(defaultChoice).toBe(2);
+  });
+
+  it("should return the corresponding commands for the corresponding configuration", async () => {
+    const config = {
+      release: {
+        local: false,
+        commitMessage: (version) => `chore: tagging release ${version}`,
+        prerelease: [
+          {
+            command: "npm run test",
+          },
+          {
+            name: "generate changelog",
+            command: "npm run changelog",
+          },
+          {
+            name: "run bundlesize",
+            command: "npm run bundlesize",
+            verbose: true,
+          },
+        ],
+        tag: {
+          enabled: true,
+          prefix: "v",
+        },
+      },
+    };
+    const { commands, instruction } = prepareReleaseTasks(config, "6.6.6");
+    const expectedCommands = [
+      {
+        action: "npm run test",
+        name: "npm run test",
+        verbose: false,
+        "dry-run": true,
+      },
+      {
+        action: "npm run changelog",
+        name: "generate changelog",
+        verbose: false,
+        "dry-run": true,
+      },
+      {
+        action: "npm run bundlesize",
+        name: "run bundlesize",
+        verbose: true,
+        "dry-run": true,
+      },
+      { action: "git add -A", name: "git stage", "dry-run": true },
+      {
+        action: 'git commit -a -m "chore: tagging release 6.6.6"',
+        name: "git commit",
+        "dry-run": true,
+      },
+      {
+        action: 'git tag -a v6.6.6 -m "version 6.6.6"',
+        name: "tag",
+        "dry-run": true,
+      },
+      {
+        action: "git push --no-verify && git push --tags --no-verify",
+        name: "push",
+        "dry-run": true,
+      },
+    ];
+
+    expect(instruction).toBe(
+      "npm run test, generate changelog, run bundlesize, git stage, git commit, tag and push..."
+    );
+    expect(deepEqual(expectedCommands, commands)).toBe(true);
+  });
+
+  it("should return the corresponding commands with no tagging", async () => {
+    const config = {
+      release: {
+        local: false,
+        commitMessage: (version) => `chore: releasing version ${version}`,
+        prerelease: [
+          {
+            command: "npm run test",
+          },
+          {
+            name: "generate changelog",
+            command: "npm run changelog",
+          },
+          {
+            name: "run bundlesize",
+            command: "npm run bundlesize",
+            verbose: true,
+          },
+        ],
+        tag: {
+          enabled: false,
+          prefix: "v",
+        },
+      },
+    };
+    const { commands, instruction } = prepareReleaseTasks(config, "6.6.6");
+    const expectedCommands = [
+      {
+        action: "npm run test",
+        name: "npm run test",
+        verbose: false,
+        "dry-run": true,
+      },
+      {
+        action: "npm run changelog",
+        name: "generate changelog",
+        verbose: false,
+        "dry-run": true,
+      },
+      {
+        action: "npm run bundlesize",
+        name: "run bundlesize",
+        verbose: true,
+        "dry-run": true,
+      },
+      { action: "git add -A", name: "git stage", "dry-run": true },
+      {
+        action: 'git commit -a -m "chore: releasing version 6.6.6"',
+        name: "git commit",
+        "dry-run": true,
+      },
+      {
+        action: "git push --no-verify",
+        name: "push",
+        "dry-run": true,
+      },
+    ];
+
+    expect(instruction).toBe(
+      "npm run test, generate changelog, run bundlesize, git stage, git commit and push..."
+    );
+    expect(deepEqual(expectedCommands, commands)).toBe(true);
+  });
+
+  it("should return the corresponding commands with no tagging, and local is true", async () => {
+    const config = {
+      release: {
+        local: true,
+        commitMessage: (version) => `chore: releasing version ${version}`,
+        prerelease: [
+          {
+            command: "npm run test",
+          },
+          {
+            name: "generate changelog",
+            command: "npm run changelog",
+          },
+          {
+            name: "run bundlesize",
+            command: "npm run bundlesize",
+            verbose: true,
+          },
+        ],
+        tag: {
+          enabled: false,
+          prefix: "v",
+        },
+      },
+    };
+    const { commands, instruction } = prepareReleaseTasks(config, "6.6.6");
+    const expectedCommands = [
+      {
+        action: "npm run test",
+        name: "npm run test",
+        verbose: false,
+        "dry-run": true,
+      },
+      {
+        action: "npm run changelog",
+        name: "generate changelog",
+        verbose: false,
+        "dry-run": true,
+      },
+      {
+        action: "npm run bundlesize",
+        name: "run bundlesize",
+        verbose: true,
+        "dry-run": true,
+      },
+      { action: "git add -A", name: "git stage", "dry-run": true },
+      {
+        action: 'git commit -a -m "chore: releasing version 6.6.6"',
+        name: "git commit",
+        "dry-run": true,
+      },
+    ];
+
+    expect(instruction).toBe(
+      "npm run test, generate changelog, run bundlesize, git stage and git commit..."
+    );
+    expect(deepEqual(expectedCommands, commands)).toBe(true);
   });
 });
 
@@ -275,7 +473,6 @@ describe("when testing for utilities with logging side-effects", () => {
     spyLog = jest.spyOn(console, "log").mockImplementation(mockLog);
     mockPrompt = jest.fn(() => ({ goodToGo: true }));
     spyPrompt = jest.spyOn(inquirer, "prompt").mockImplementation(mockPrompt);
-    global["dry-run"] = true;
   });
   afterEach(() => {
     spyExit.mockRestore();

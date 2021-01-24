@@ -12,6 +12,8 @@ const exec = util.promisify(require("child_process").exec);
 const pkg = path.join(process.cwd(), "package.json");
 
 const ONE_SECOND = 1000;
+const COMMIT_MESSAGE = "git commit";
+const PUSH_MESSAGE = "push";
 
 /* istanbul ignore next */
 const startSpinner = (msg) => ora(msg).start();
@@ -224,7 +226,73 @@ const getNextPossibleVersions = ({ current, config }) => {
   return { choices, defaultChoice };
 };
 
+const prepareReleaseTasks = (config, version) => {
+  const tasks = config.release.prerelease;
+  const commands = [];
+  const names = [];
+  if (tasks.length) {
+    tasks.forEach((task) => {
+      const name = task.name ? task.name : task.command;
+      commands.push({
+        action: task.command,
+        name,
+        verbose: task.verbose ? task.verbose : false,
+        "dry-run": global["dry-run"],
+      });
+      names.push(name);
+    });
+  }
+
+  const stageMsg = "git stage";
+  commands.push({
+    action: `git add -A`,
+    name: stageMsg,
+    "dry-run": global["dry-run"],
+  });
+  names.push(stageMsg);
+
+  commands.push({
+    action: `git commit -a -m "${config.release.commitMessage(version)}"`,
+    name: COMMIT_MESSAGE,
+    "dry-run": global["dry-run"],
+  });
+  names.push(COMMIT_MESSAGE);
+
+  const tagTask = config.release.tag;
+  if (tagTask.enabled) {
+    const name = "tag";
+    commands.push({
+      action: `git tag -a ${tagTask.prefix}${version} -m "version ${version}"`,
+      name,
+      "dry-run": global["dry-run"],
+    });
+    names.push(name);
+  }
+
+  if (!config.release.local) {
+    const action = tagTask.enabled
+      ? "git push --no-verify && git push --tags --no-verify"
+      : "git push --no-verify";
+    commands.push({
+      action,
+      name: PUSH_MESSAGE,
+      "dry-run": global["dry-run"],
+    });
+    names.push(PUSH_MESSAGE);
+  }
+
+  return {
+    commands,
+    // eslint-disable-next-line no-useless-concat
+    instruction: `${names.join(", ").replace(/,([^,]*)$/, " and" + "$1")}...`,
+  };
+};
+
 module.exports = {
+  // constants
+  COMMIT_MESSAGE,
+  PUSH_MESSAGE,
+  // public methods
   upperFirst,
   displayConfirmation,
   displayErrorMessages,
@@ -235,6 +303,7 @@ module.exports = {
   mergeConfigurations,
   pkg,
   preflightValidation,
+  prepareReleaseTasks,
   runCommand,
   shouldContinue,
   startSpinner,
