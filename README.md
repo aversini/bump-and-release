@@ -10,7 +10,7 @@
 
 ```sh
 > cd your-project
-> npm install --save bump-and-release
+> npm install --save-dev bump-and-release
 ```
 
 ## Configuration
