@@ -14,7 +14,7 @@
   },
   "files": [
     "bin",
-    "src"
+    "src/*.js"
   ],
   "scripts": {
     "bump": "node ./bin/bump-and-release.js -t bump -c \"./configuration/config.js\"",
