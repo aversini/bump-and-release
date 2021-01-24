@@ -16,12 +16,11 @@ const COMMIT_MESSAGE = "git commit";
 const PUSH_MESSAGE = "push";
 
 /* istanbul ignore next */
-const startSpinner = (msg) => ora(msg).start();
-
-/* istanbul ignore next */
 class Spinner {
   constructor(msg) {
-    this.spinner = ora();
+    this.spinner = ora({
+      isSilent: process.env.NODE_ENV === "test",
+    });
     this.spinner.start(msg);
   }
 
@@ -306,7 +305,6 @@ module.exports = {
   prepareReleaseTasks,
   runCommand,
   shouldContinue,
-  startSpinner,
   Spinner,
   // private methods
   _getCurrentVersion: getCurrentVersion,

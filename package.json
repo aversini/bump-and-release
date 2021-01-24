@@ -24,9 +24,9 @@
     "prettier:fix": "prettier --loglevel error --write \"{src/**/*.js,bin/**/*.js}\"",
     "prettier:all": "npm-run-all --serial prettier:fix lint:fix",
     "release": "node ./bin/bump-and-release.js -t release -c \"./configuration/config.js\"",
-    "test": "jest",
-    "test:coverage": "jest --coverage",
-    "test:watch": "jest --watch"
+    "test": "cross-env NODE_ENV=\"test\" jest",
+    "test:coverage": "npm run test -- --coverage",
+    "test:watch": "npm run test -- --watch"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^11.0.0",

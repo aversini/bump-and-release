@@ -1,13 +1,10 @@
 const inquirer = require("inquirer");
-const kleur = require("kleur");
 const currentVersion = require("../../package.json").version;
 
 const bump = require("../bump");
 const defaultConfig = require("../defaults");
 
 let mockExit, spyExit, mockLog, spyLog, mockPrompt, spyPrompt;
-
-kleur.enabled = false;
 
 describe("when testing for bump with logging side-effects", () => {
   beforeEach(() => {
@@ -17,7 +14,6 @@ describe("when testing for bump with logging side-effects", () => {
     spyLog = jest.spyOn(console, "log").mockImplementation(mockLog);
     mockPrompt = jest.fn(() => ({ goodToGo: true }));
     spyPrompt = jest.spyOn(inquirer, "prompt").mockImplementation(mockPrompt);
-    global["dry-run"] = true;
   });
   afterEach(() => {
     spyExit.mockRestore();

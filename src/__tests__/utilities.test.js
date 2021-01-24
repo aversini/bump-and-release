@@ -1,5 +1,4 @@
 const inquirer = require("inquirer");
-const kleur = require("kleur");
 const currentVersion = require("../../package.json").version;
 
 const {
@@ -21,9 +20,6 @@ const {
 const deepEqual = require("./helpers/deepEqual");
 
 let mockExit, spyExit, mockLog, spyLog, mockPrompt, spyPrompt;
-
-kleur.enabled = false;
-global["dry-run"] = true;
 
 describe("when testing for individual utilities wtih no logging side-effects", () => {
   it("should convert the first letter of a sentence to uppercase", async () => {
@@ -122,6 +118,7 @@ describe("when testing for individual utilities wtih no logging side-effects", (
       config,
     });
     expect(deepEqual(choices, expectedChoices)).toBe(true);
+    // eslint-disable-next-line no-magic-numbers
     expect(defaultChoice).toBe(2);
   });
 
@@ -518,6 +515,7 @@ describe("when testing for utilities with logging side-effects", () => {
     const version = 123;
     const branch = "master";
     const remote = "github";
+    const orginalDryRun = global["dry-run"];
     global["dry-run"] = false;
 
     displayIntroductionMessage({ version, branch, remote });
@@ -527,6 +525,7 @@ describe("when testing for utilities with logging side-effects", () => {
       `Current tracking remote is ${remote}`
     );
     expect(mockLog).not.toHaveBeenCalledWith("Dry-run mode is ON");
+    global["dry-run"] = orginalDryRun;
   });
 
   it("should display a goodbye message and exit with 0", async () => {

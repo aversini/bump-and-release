@@ -1,3 +1,4 @@
+const path = require("path");
 module.exports = {
   /**
    * By default, Jest runs all tests and produces all errors into
@@ -60,6 +61,21 @@ module.exports = {
    * Default false
    */
   notify: false,
+
+  /**
+   * A list of paths to modules that run some code to configure or
+   * set up the testing framework before each test. Since
+   * setupFiles executes before the test framework is installed in
+   * the environment, this script file presents you the
+   * opportunity of running some code immediately after the test
+   * framework has been installed in the environment.
+   * @type {Array}
+   *
+   * Default []
+   */
+  setupFilesAfterEnv: [
+    path.join(__dirname, "configuration/jest/before-all-env.js"),
+  ],
 
   /**
    * A list of paths to directories that Jest should use
