@@ -1,3 +1,12 @@
+## [0.5.1](https://github.com/aversini/bump-and-release/compare/v0.5.0...v0.5.1) (2021-01-24)
+
+
+### Bug Fixes
+
+* error messages should be red, not orange ([f7d1af2](https://github.com/aversini/bump-and-release/commit/f7d1af2c8f4e32c74ef3494c7877d26a9db1dd57))
+
+
+
 # [0.5.0](https://github.com/aversini/bump-and-release/compare/v0.4.0...v0.5.0) (2021-01-23)
 
 
