@@ -25,7 +25,7 @@ describe("when testing for bump with logging side-effects", () => {
     spyPrompt.mockRestore();
   });
 
-  it("should run bump with the default configuration and drr-run mode is ON", async () => {
+  it("should run bump with the default configuration and dry-run mode is ON", async () => {
     await bump(defaultConfig);
     expect(mockLog).toHaveBeenCalledWith(
       `Current version is ${currentVersion}`
