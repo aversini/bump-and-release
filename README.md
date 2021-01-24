@@ -53,6 +53,10 @@ By default, the "bump" command will:
 
 If any of those tasks fail, the process stops.
 
+### Bump example
+
+<img height="451" width="810" src="https://raw.githubusercontent.com/aversini/bump-and-release/master/configuration/bump.png" alt="bump example">
+
 ## Release
 
 By default, the "release" command will:
@@ -67,6 +71,10 @@ By default, the "release" command will:
 1. Push code and tags to the tracking remote
 
 If any of those tasks fail, the process stops.
+
+### Release example
+
+<img height="451" width="810" src="https://raw.githubusercontent.com/aversini/bump-and-release/master/configuration/release.png" alt="release example">
 
 ## Custom configuration
 
