@@ -1,3 +1,4 @@
+const _ = require("lodash");
 const inquirer = require("inquirer");
 const kleur = require("kleur");
 const ora = require("ora");
@@ -5,6 +6,7 @@ const util = require("util");
 const memoizeOne = require("async-memoize-one");
 const fs = require("fs-extra");
 const path = require("path");
+const semver = require("semver");
 const exec = util.promisify(require("child_process").exec);
 
 const pkg = path.join(process.cwd(), "package.json");
@@ -46,6 +48,22 @@ const log = (...args) => {
 };
 
 const upperFirst = (str) => str[0].toUpperCase() + str.slice(1);
+
+/**
+ *
+ * WARNING: this method is nasty! It will alter the original
+ * objects... This needs to be fixed, but for now, it's what it is.
+ *
+ */
+const mergeConfigurations = (defaultConfig, customConfig) =>
+  _.mergeWith(defaultConfig, customConfig, (def, cust, key) => {
+    if (key === "nextPossible") {
+      return _.orderBy(
+        _.values(_.merge(_.keyBy(def, "type"), _.keyBy(cust, "type"))),
+        ["pos"]
+      );
+    }
+  });
 
 const displayConfirmation = async (msg) => {
   const questions = {
@@ -108,6 +126,11 @@ const readPackageJSON = async () => {
 };
 const memoizedPackageJSON = memoizeOne(readPackageJSON);
 
+const getCurrentVersion = async () => {
+  const packageJson = await memoizedPackageJSON();
+  return packageJson.version;
+};
+
 const runCommand = async (
   command,
   { verbose: verbose, ignoreError: ignoreError } = {
@@ -125,11 +148,6 @@ const runCommand = async (
       throw new Error(kleur.red(err));
     }
   }
-};
-
-const getCurrentVersion = async () => {
-  const packageJson = await memoizedPackageJSON();
-  return packageJson.version;
 };
 
 const preflightValidation = async (config) => {
@@ -183,13 +201,38 @@ const preflightValidation = async (config) => {
   };
 };
 
+const getNextPossibleVersions = ({ current, config }) => {
+  const choices = [];
+  let index = 0,
+    defaultChoice = 0;
+  config.bump.nextPossible.forEach((next) => {
+    if (next.enabled || typeof next.enabled === "undefined") {
+      if (next.default) {
+        defaultChoice = index;
+      }
+      index++;
+      const nextVersion = semver.inc(current, next.type, next.identifier);
+      choices.push({
+        value: nextVersion,
+        short: next.type,
+        name: next.prompt
+          ? next.prompt(next.type, nextVersion)
+          : `[${next.type}] ... bump to ${nextVersion}`,
+      });
+    }
+  });
+  return { choices, defaultChoice };
+};
+
 module.exports = {
   upperFirst,
   displayConfirmation,
   displayErrorMessages,
   displayIntroductionMessage,
+  getNextPossibleVersions,
   log,
   memoizedPackageJSON,
+  mergeConfigurations,
   pkg,
   preflightValidation,
   runCommand,

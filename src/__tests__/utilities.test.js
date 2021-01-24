@@ -6,7 +6,9 @@ const {
   displayConfirmation,
   displayIntroductionMessage,
   displayErrorMessages,
+  getNextPossibleVersions,
   log,
+  mergeConfigurations,
   preflightValidation,
   runCommand,
   shouldContinue,
@@ -14,6 +16,8 @@ const {
   // private methods
   _getCurrentVersion,
 } = require("../utilities");
+
+const deepEqual = require("./helpers/deepEqual");
 
 let mockExit, spyExit, mockLog, spyLog, mockPrompt, spyPrompt;
 
@@ -58,6 +62,201 @@ describe("when testing for individual utilities wtih no logging side-effects", (
 
   it("should throw an error if the command fails", async () => {
     await expect(runCommand("not-a-command")).rejects.toBeTruthy();
+  });
+
+  it("should return the corresponding choices for the next possible versions", async () => {
+    const config = {
+      bump: {
+        nextPossible: [
+          {
+            type: "patch",
+            prompt: (type, version) =>
+              `[${type}] ... bump to next ${type} (${version})`,
+          },
+          {
+            type: "minor",
+            prompt: (type, version) =>
+              `[${type}] ... bump to next ${type} (${version})`,
+          },
+          {
+            type: "major",
+            default: true,
+          },
+          {
+            type: "custom",
+            prompt: (type) => `[${type}] .. enter your own custom version`,
+          },
+        ],
+      },
+    };
+    const expectedChoices = [
+      {
+        value: "1.0.2",
+        short: "patch",
+        name: "[patch] ... bump to next patch (1.0.2)",
+      },
+      {
+        value: "1.1.0",
+        short: "minor",
+        name: "[minor] ... bump to next minor (1.1.0)",
+      },
+      {
+        value: "2.0.0",
+        short: "major",
+        name: "[major] ... bump to 2.0.0",
+      },
+      {
+        value: null,
+        short: "custom",
+        name: "[custom] .. enter your own custom version",
+      },
+    ];
+    const { choices, defaultChoice } = getNextPossibleVersions({
+      current: "1.0.1",
+      config,
+    });
+    expect(deepEqual(choices, expectedChoices)).toBe(true);
+    expect(defaultChoice).toBe(2);
+  });
+});
+
+describe("when testing for configuration merging wtih no logging side-effects", () => {
+  it("should perform a deep equality between 2 exact same objects", async () => {
+    const config = {
+      bump: {
+        nextPossible: [
+          {
+            type: "minor",
+            default: true,
+          },
+        ],
+      },
+      release: {
+        prerelease: [
+          {
+            name: "run tests",
+            command: "npm run test",
+          },
+          {
+            name: "generate changelog",
+            command: "npm run changelog",
+          },
+        ],
+      },
+    };
+    expect(deepEqual(config, config)).toBe(true);
+  });
+
+  it("should perform a deep equality between 2 slightly different objects", async () => {
+    const configA = {
+      bump: {
+        nextPossible: [
+          {
+            type: "minor",
+            default: true,
+          },
+        ],
+      },
+      release: {
+        prerelease: [
+          {
+            name: "run tests",
+            command: "npm run test",
+          },
+          {
+            name: "generate changelog",
+            command: "npm run changelog",
+          },
+        ],
+      },
+    };
+    const configB = {
+      bump: {
+        nextPossible: [
+          {
+            type: "minor",
+            default: false,
+          },
+        ],
+      },
+      release: {
+        prerelease: [
+          {
+            name: "run tests",
+            command: "npm run test",
+          },
+          {
+            name: "generate changelog",
+            command: "npm run changelog",
+          },
+        ],
+      },
+    };
+    expect(deepEqual(configA, configB)).toBe(false);
+  });
+
+  it("should perform a deep equality between 2 completely different objects", async () => {
+    const configA = {
+      bump: {
+        nextPossible: [
+          {
+            type: "minor",
+            default: true,
+          },
+        ],
+      },
+    };
+    const configB = {
+      bump: {
+        nextPossible: [
+          {
+            type: "minor",
+            default: false,
+          },
+        ],
+      },
+      release: true,
+    };
+    expect(deepEqual(configA, configB)).toBe(false);
+  });
+
+  it("should return a new configuration with custom nexPossible", async () => {
+    const configA = {
+      bump: {
+        nextPossible: [
+          {
+            type: "minor",
+            default: false,
+          },
+        ],
+      },
+    };
+    const configB = {
+      bump: {
+        nextPossible: [
+          {
+            type: "minor",
+            default: true,
+          },
+        ],
+      },
+    };
+    expect(deepEqual(configA, configB)).toBe(false);
+    /**
+     * This method will alter the objects, so no way to test for their
+     * equality AFTER the merge is done... Only thing we can do is test
+     * that the end result gets the right values.
+     */
+    const res = mergeConfigurations(configA, configB);
+
+    expect(
+      deepEqual(res.bump.nextPossible, [
+        {
+          type: "minor",
+          default: true,
+        },
+      ])
+    ).toBe(true);
   });
 });
 

@@ -9,6 +9,7 @@ const pkgLock = path.join(process.cwd(), "package-lock.json");
 const {
   displayConfirmation,
   displayIntroductionMessage,
+  getNextPossibleVersions,
   log,
   memoizedPackageJSON,
   pkg,
@@ -20,54 +21,36 @@ const {
 
 const BUMP_TYPE_CUSTOM = "custom";
 
+/* istanbul ignore next */
 const updatePackageLockJSON = async (version) => {
-  let packageLockJson;
-  try {
-    packageLockJson = await fs.readJSON(pkgLock);
-    packageLockJson.version = version;
-    await fs.writeJSON(pkgLock, packageLockJson, {
-      spaces: 2,
-    });
-  } catch (err) {
-    // nothing to declare officer
-  }
-};
-
-const updatePackageJson = async (newVersion) => {
-  const packageJson = await memoizedPackageJSON();
-  packageJson.version = newVersion;
-  try {
-    await fs.writeJSON(pkg, packageJson, {
-      spaces: 2,
-    });
-    await updatePackageLockJSON(newVersion);
-  } catch (err) {
-    throw new Error(`Unable to update package.json\n${err}`);
-  }
-};
-
-const getNextPossibleVersions = ({ current, config }) => {
-  const choices = [];
-  let index = 0,
-    defaultChoice = 0;
-  config.bump.nextPossible.forEach((next) => {
-    if (next.enabled || typeof next.enabled === "undefined") {
-      if (next.default) {
-        defaultChoice = index;
-      }
-      index++;
-      const nextVersion = semver.inc(current, next.type, next.identifier);
-      choices.push({
-        value: nextVersion,
-        short: next.type,
-        name: next.prompt
-          ? next.prompt(next.type, nextVersion)
-          : `[${next.type}] ... bump to ${nextVersion}`,
+  if (!global["dry-run"]) {
+    let packageLockJson;
+    try {
+      packageLockJson = await fs.readJSON(pkgLock);
+      packageLockJson.version = version;
+      await fs.writeJSON(pkgLock, packageLockJson, {
+        spaces: 2,
       });
+    } catch (err) {
+      // nothing to declare officer
     }
-  });
+  }
+};
 
-  return { choices, defaultChoice };
+/* istanbul ignore next */
+const updatePackageJson = async (newVersion) => {
+  if (!global["dry-run"]) {
+    const packageJson = await memoizedPackageJSON();
+    packageJson.version = newVersion;
+    try {
+      await fs.writeJSON(pkg, packageJson, {
+        spaces: 2,
+      });
+      await updatePackageLockJSON(newVersion);
+    } catch (err) {
+      throw new Error(`Unable to update package.json\n${err}`);
+    }
+  }
 };
 
 const promptForBumpType = async ({ current, config }) => {
@@ -85,6 +68,7 @@ const promptForBumpType = async ({ current, config }) => {
 
   const answer = await inquirer.prompt(questions);
 
+  /* istanbul ignore if */
   if (answer.action === BUMP_TYPE_CUSTOM) {
     const newAnswer = await inquirer.prompt({
       type: "input",
@@ -122,6 +106,7 @@ module.exports = async (config) => {
   await updatePackageJson(newVersion);
   spinner.text = "Git stage and commit...";
 
+  /* istanbul ignore if */
   if (!global["dry-run"]) {
     await runCommand(
       `git add -A && git commit -a -m "${config.bump.commitMessage(
@@ -137,6 +122,7 @@ module.exports = async (config) => {
   }
 
   if (!config.bump.local) {
+    /* istanbul ignore if */
     if (!global["dry-run"]) {
       spinner.text = "Pushing to remote...";
       await runCommand("git push --no-verify");
