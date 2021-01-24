@@ -237,3 +237,7 @@ module.exports = {
   },
 };
 ```
+
+## License
+
+MIT © Arno Versini
