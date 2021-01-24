@@ -11,8 +11,10 @@ const pkg = path.join(process.cwd(), "package.json");
 
 const ONE_SECOND = 1000;
 
+/* istanbul ignore next */
 const startSpinner = (msg) => ora(msg).start();
 
+/* istanbul ignore next */
 class Spinner {
   constructor(msg) {
     this.spinner = ora();
@@ -43,7 +45,7 @@ const log = (...args) => {
   console.log(...args);
 };
 
-const capitalize = (str) => str[0].toUpperCase() + str.slice(1);
+const upperFirst = (str) => str[0].toUpperCase() + str.slice(1);
 
 const displayConfirmation = async (msg) => {
   const questions = {
@@ -64,19 +66,13 @@ const displayConfirmation = async (msg) => {
 };
 
 const displayErrorMessages = (errorMsg) => {
-  if (errorMsg.length) {
-    let shouldExit = false;
+  if (errorMsg && errorMsg.length) {
     log();
     errorMsg.forEach(function (msg) {
-      if (msg) {
-        shouldExit = true;
-        log(msg);
-      }
+      log(msg);
     });
-    if (shouldExit) {
-      log();
-      process.exit(0);
-    }
+    log();
+    process.exit(0);
   }
 };
 
@@ -97,6 +93,7 @@ const shouldContinue = (goodToGo) => {
     log("\nBye then!");
     process.exit(0);
   }
+  return true;
 };
 
 const readPackageJSON = async () => {
@@ -105,6 +102,7 @@ const readPackageJSON = async () => {
     packageJson = await fs.readJSON(pkg);
     return packageJson;
   } catch (err) {
+    /* istanbul ignore next */
     throw new Error(kleur.red(`Unable to parse package.json\n${err}`));
   }
 };
@@ -169,6 +167,7 @@ const preflightValidation = async (config) => {
         .red(`Tracking remote must be one of "${config.allowedRemotes}".`)
     );
   }
+  /* istanbul ignore if */
   if (typeof dirty === "undefined" && !config.bump.local) {
     errorMessage.push(
       kleur.bold().red("Working dir must be clean (no uncommited files).")
@@ -185,7 +184,7 @@ const preflightValidation = async (config) => {
 };
 
 module.exports = {
-  capitalize,
+  upperFirst,
   displayConfirmation,
   displayErrorMessages,
   displayIntroductionMessage,
@@ -197,4 +196,6 @@ module.exports = {
   shouldContinue,
   startSpinner,
   Spinner,
+  // private methods
+  _getCurrentVersion: getCurrentVersion,
 };

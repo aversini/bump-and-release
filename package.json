@@ -23,17 +23,22 @@
     "lint": "eslint --color \"./src/**/*.js\" \"./bin/**/*.js\"",
     "prettier:fix": "prettier --loglevel error --write \"{src/**/*.js,bin/**/*.js}\"",
     "prettier:all": "npm-run-all --serial prettier:fix lint:fix",
-    "release": "node ./bin/bump-and-release.js -t release -c \"./configuration/config.js\""
+    "release": "node ./bin/bump-and-release.js -t release -c \"./configuration/config.js\"",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^11.0.0",
     "@commitlint/cli": "^11.0.0",
+    "@testing-library/jest-dom": "5.11.9",
     "babel-eslint": "^10.1.0",
     "conventional-changelog-cli": "^2.1.1",
     "cross-env": "^7.0.3",
     "eslint-config-prettier": "^7.2.0",
     "eslint": "^7.18.0",
     "husky": "^4.3.8",
+    "jest": "26.6.3",
     "lint-staged": "^10.5.3",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.2.1"
