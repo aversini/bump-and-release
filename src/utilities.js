@@ -173,23 +173,19 @@ const preflightValidation = async (config) => {
 
   if (!config.allowedBranches.includes(branch)) {
     errorMessage.push(
-      kleur
-        .bold()
-        .red(`Working branch must be one of "${config.allowedBranches}".`)
+      kleur.red(`Working branch must be one of "${config.allowedBranches}".`)
     );
   }
 
   if (!config.allowedRemotes.includes(remote)) {
     errorMessage.push(
-      kleur
-        .bold()
-        .red(`Tracking remote must be one of "${config.allowedRemotes}".`)
+      kleur.red(`Tracking remote must be one of "${config.allowedRemotes}".`)
     );
   }
   /* istanbul ignore if */
   if (typeof dirty === "undefined" && !config.bump.local) {
     errorMessage.push(
-      kleur.bold().red("Working dir must be clean (no uncommited files).")
+      kleur.red("Working dir must be clean (no uncommited files).")
     );
   }
 
