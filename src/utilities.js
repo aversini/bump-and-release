@@ -182,7 +182,7 @@ const preflightValidation = async (config) => {
       `Tracking remote must be one of "${config.allowedRemotes}".`
     );
   }
-  /* istanbul ignore if */
+  /* istanbul ignore next */
   if (typeof dirty === "undefined" && !config.bump.local) {
     errorMessage.push("Working dir must be clean (no uncommited files).");
   }
