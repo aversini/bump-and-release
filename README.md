@@ -24,14 +24,30 @@ Update your `package.json` file with the following scripts calls:
 }
 ```
 
-If you are using a configuration file, you need to pass it via the parameter `-c`:
+If you are using a configuration file, you can pass it via the parameter `-c`:
 
 ```json
 "scripts": {
-  "bump": "bump-and-release -t bump -c config.js",
-  "release": "bump-and-release-t release -c config.js"
+  "bump": "bump-and-release -t bump -c ./config/app-config.js",
+  "release": "bump-and-release-t release -c ./config/app-config.js"
 }
 ```
+
+Or if you name it `.bump-and-release.config.js` and put it in the same location as your `package.json` file, it will be taken into account automatically.
+
+This:
+
+```json
+  "bump": "bump-and-release -t bump -c .bump-and-release.config.js"
+```
+
+is equivalent to:
+
+```json
+  "bump": "bump-and-release -t bump"
+```
+
+if the file `.bump-and-release.config.js` can be found next to your `package.json`.
 
 ## Bump
 
