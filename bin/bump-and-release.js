@@ -29,9 +29,17 @@ const yargs = require("yargs")
 let customCfg;
 
 try {
-  customCfg = yargs.config
-    ? require(path.join(process.cwd(), yargs.config))
-    : {};
+  // trying user config at the root of the user package
+  customCfg = require(path.join(process.cwd(), ".bump-and-release.config.js"));
+} catch (e) {
+  // nothing to declare officer
+}
+
+try {
+  if (yargs.config) {
+    // trying user provided config from the CLI
+    customCfg = require(path.join(process.cwd(), yargs.config));
+  }
 } catch (e) {
   displayErrorMessages([`Unable to read config file ${yargs.config}`, e]);
 }
