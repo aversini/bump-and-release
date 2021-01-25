@@ -4,7 +4,10 @@ const path = require("path");
 const bump = require("../src/bump");
 const release = require("../src/release");
 const defaults = require("../src/defaults");
-const { mergeConfigurations } = require("../src/utilities");
+const {
+  displayErrorMessages,
+  mergeConfigurations,
+} = require("../src/utilities");
 
 const yargs = require("yargs")
   .options({
@@ -23,9 +26,15 @@ const yargs = require("yargs")
   })
   .hide("version").argv;
 
-const customCfg = yargs.config
-  ? require(path.join(process.cwd(), yargs.config))
-  : {};
+let customCfg;
+
+try {
+  customCfg = yargs.config
+    ? require(path.join(process.cwd(), yargs.config))
+    : {};
+} catch (e) {
+  displayErrorMessages([`Unable to read config file ${yargs.config}`, e]);
+}
 
 /**
  * Merging default configuration with the

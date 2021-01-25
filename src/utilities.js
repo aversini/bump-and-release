@@ -88,7 +88,7 @@ const displayErrorMessages = (errorMsg) => {
   if (errorMsg && errorMsg.length) {
     log();
     errorMsg.forEach(function (msg) {
-      log(msg);
+      log(kleur.red(msg));
     });
     log();
     process.exit(0);
@@ -173,20 +173,18 @@ const preflightValidation = async (config) => {
 
   if (!config.allowedBranches.includes(branch)) {
     errorMessage.push(
-      kleur.red(`Working branch must be one of "${config.allowedBranches}".`)
+      `Working branch must be one of "${config.allowedBranches}".`
     );
   }
 
   if (!config.allowedRemotes.includes(remote)) {
     errorMessage.push(
-      kleur.red(`Tracking remote must be one of "${config.allowedRemotes}".`)
+      `Tracking remote must be one of "${config.allowedRemotes}".`
     );
   }
   /* istanbul ignore if */
   if (typeof dirty === "undefined" && !config.bump.local) {
-    errorMessage.push(
-      kleur.red("Working dir must be clean (no uncommited files).")
-    );
+    errorMessage.push("Working dir must be clean (no uncommited files).");
   }
 
   displayErrorMessages(errorMessage);
