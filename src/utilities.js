@@ -102,7 +102,7 @@ const displayIntroductionMessage = ({ version, branch, remote }) => {
   log(`Current tracking remote is ${kleur.cyan(remote)}`);
   log();
   if (global["dry-run"]) {
-    log("Dry-run mode is ON");
+    log(kleur.yellow("Dry-run mode is ON"));
     log();
   }
 };
