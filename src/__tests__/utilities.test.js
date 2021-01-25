@@ -62,6 +62,12 @@ describe("when testing for individual utilities wtih no logging side-effects", (
     await expect(runCommand("not-a-command")).rejects.toBeTruthy();
   });
 
+  it("should not throw an error even if the command fails", async () => {
+    await expect(
+      runCommand("not-a-command", { ignoreError: true })
+    ).resolves.toBeUndefined();
+  });
+
   it("should return the corresponding choices for the next possible versions", async () => {
     const config = {
       bump: {
