@@ -1,3 +1,18 @@
+# [0.6.0](https://github.com/aversini/bump-and-release/compare/v0.5.1...v0.6.0) (2021-01-25)
+
+
+### Bug Fixes
+
+* dry-run mode warning is not prominent enough ([9f4b168](https://github.com/aversini/bump-and-release/commit/9f4b168fe0c2688f07806230049e20a6ee3f3f26))
+* throw and error and exit if the provided config file does not exist ([c51ea00](https://github.com/aversini/bump-and-release/commit/c51ea00ba9cbe45a276b61f640f11bef1f884252))
+
+
+### Features
+
+* auto detection of user config at the root of working dir ([ce64d73](https://github.com/aversini/bump-and-release/commit/ce64d73d4197975470febec33263cb5d98d340a9))
+
+
+
 ## [0.5.1](https://github.com/aversini/bump-and-release/compare/v0.5.0...v0.5.1) (2021-01-24)
 
 
