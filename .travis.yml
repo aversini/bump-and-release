@@ -7,5 +7,6 @@ git:
   clone: false
 install:
   - git clone https://github.com/aversini/bump-and-release.git
+  - cd bump-and-release
   - git branch -u origin/master
   - npm ci
