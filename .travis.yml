@@ -4,9 +4,8 @@ node_js:
   - "12"
   - "14"
 git:
-  depth: false
+  clone: false
 install:
-  - git config remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
+  - git clone https://github.com/aversini/bump-and-release.git
   - git branch -u origin/master
-  - git pull
   - npm ci
