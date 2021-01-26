@@ -7,3 +7,4 @@ git:
   depth: 1
 before_script:
   - git remote add github https://github.com/aversini/bump-and-release.git
+  - git branch -u github/master
