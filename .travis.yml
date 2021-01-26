@@ -12,3 +12,5 @@ install:
   - git pull github master
   - git branch -u github/master
   - npm ci
+script:
+  - npm run test:coverage
