@@ -8,5 +8,6 @@ git:
 install:
   - git clone https://github.com/aversini/bump-and-release.git
   - cd bump-and-release
-  - git branch -u origin/master
+  - git remote add github https://github.com/aversini/bump-and-release.git
+  - git branch -u github/master
   - npm ci
