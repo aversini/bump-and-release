@@ -5,3 +5,5 @@ node_js:
   - "14"
 git:
   depth: 1
+before_script:
+  - git remote add https://github.com/aversini/bump-and-release.git
