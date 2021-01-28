@@ -18,6 +18,7 @@
   ],
   "scripts": {
     "bump": "node ./bin/bump-and-release.js -t bump",
+    "codecov": "codecov",
     "changelog": "conventional-changelog -i CHANGELOG.md -s -p angular",
     "lint:fix": "eslint --fix --color \"./src/**/*.js\" \"./bin/**/*.js\"",
     "lint": "eslint --color \"./src/**/*.js\" \"./bin/**/*.js\"",
