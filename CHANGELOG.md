@@ -1,3 +1,12 @@
+# [0.7.0](https://github.com/aversini/bump-and-release/compare/v0.6.0...v0.7.0) (2021-01-28)
+
+
+### Bug Fixes
+
+* **Bump:** type "custom" is completely broken ([f555359](https://github.com/aversini/bump-and-release/commit/f5553595e3945450df0c70d9fb403cf05ee9fbda))
+
+
+
 # [0.6.0](https://github.com/aversini/bump-and-release/compare/v0.5.1...v0.6.0) (2021-01-25)
 
 
