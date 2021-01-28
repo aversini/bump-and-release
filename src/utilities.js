@@ -208,9 +208,12 @@ const getNextPossibleVersions = ({ current, config }) => {
       }
       index++;
       const nextVersion =
-        next.type !== "custom"
+        next.type !== BUMP_TYPE_CUSTOM
           ? semver.inc(current, next.type, next.identifier)
           : BUMP_TYPE_CUSTOM;
+      if (next.type === BUMP_TYPE_CUSTOM) {
+        choices.push(new inquirer.Separator());
+      }
       choices.push({
         value: nextVersion,
         short: next.type,

@@ -114,6 +114,7 @@ describe("when testing for individual utilities wtih no logging side-effects", (
         short: "major",
         name: "[major] ... bump to 2.0.0",
       },
+      new inquirer.Separator(),
       {
         value: BUMP_TYPE_CUSTOM,
         short: "custom",
