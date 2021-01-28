@@ -2,6 +2,7 @@ const inquirer = require("inquirer");
 const currentVersion = require("../../package.json").version;
 
 const {
+  BUMP_TYPE_CUSTOM,
   displayConfirmation,
   displayIntroductionMessage,
   displayErrorMessages,
@@ -114,7 +115,7 @@ describe("when testing for individual utilities wtih no logging side-effects", (
         name: "[major] ... bump to 2.0.0",
       },
       {
-        value: null,
+        value: BUMP_TYPE_CUSTOM,
         short: "custom",
         name: "[custom] .. enter your own custom version",
       },

@@ -14,6 +14,7 @@ const pkg = path.join(process.cwd(), "package.json");
 const ONE_SECOND = 1000;
 const COMMIT_MESSAGE = "git commit";
 const PUSH_MESSAGE = "push";
+const BUMP_TYPE_CUSTOM = "custom";
 
 /* istanbul ignore next */
 class Spinner {
@@ -206,7 +207,10 @@ const getNextPossibleVersions = ({ current, config }) => {
         defaultChoice = index;
       }
       index++;
-      const nextVersion = semver.inc(current, next.type, next.identifier);
+      const nextVersion =
+        next.type !== "custom"
+          ? semver.inc(current, next.type, next.identifier)
+          : BUMP_TYPE_CUSTOM;
       choices.push({
         value: nextVersion,
         short: next.type,
@@ -283,6 +287,7 @@ const prepareReleaseTasks = (config, version) => {
 
 module.exports = {
   // constants
+  BUMP_TYPE_CUSTOM,
   COMMIT_MESSAGE,
   PUSH_MESSAGE,
   // public methods

@@ -7,6 +7,7 @@ const path = require("path");
 const pkgLock = path.join(process.cwd(), "package-lock.json");
 
 const {
+  BUMP_TYPE_CUSTOM,
   displayConfirmation,
   displayIntroductionMessage,
   getNextPossibleVersions,
@@ -18,8 +19,6 @@ const {
   Spinner,
   runCommand,
 } = require("./utilities");
-
-const BUMP_TYPE_CUSTOM = "custom";
 
 /* istanbul ignore next */
 const updatePackageLockJSON = async (version) => {
