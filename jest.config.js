@@ -12,6 +12,18 @@ module.exports = {
   bail: 5,
 
   /**
+   * The directory where Jest should output its coverage files.
+   * To be compatible with CodeCov in CI, please set this value
+   * to "coverage" and make sure this folder is in the
+   * .gitignore file
+   *
+   * @type {String}
+   *
+   * Default undefined
+   */
+  coverageDirectory: "coverage",
+
+  /**
    * An array of glob patterns indicating a set of files for which
    * coverage information should be collected. If a file matches
    * the specified glob pattern, coverage information will be
