@@ -25,6 +25,7 @@
     "prettier:all": "npm-run-all --serial prettier:fix lint:fix",
     "release": "node ./bin/bump-and-release.js -t release",
     "test": "cross-env NODE_ENV=\"test\" jest",
+    "test:ci": "npm-run-all test:coverage codecov",
     "test:coverage": "npm run test -- --coverage",
     "test:watch": "npm run test -- --watch"
   },
