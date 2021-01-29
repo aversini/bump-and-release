@@ -56,7 +56,7 @@ By default, the "bump" command will:
 1. Run the following preflight validations
    - check if the current branch name is `master`
    - check if the current branch has a tracking remote
-   - check if that remote is `github/master`
+   - check if that remote is either `github/master` or `origin/master`
    - check if your repo has uncommitted files
 1. Prompt the user to choose from a list of possible "new versions"
    - patch
@@ -80,7 +80,7 @@ By default, the "release" command will:
 1. Run the following preflight validations
    - check if the current branch name is `master`
    - check if the current branch has a tracking remote
-   - check if that remote is `github/master`
+   - check if that remote is `github/master`or `origin/master`
    - check if your repo has uncommitted files
 1. Stage and commit any modified files
 1. Tag the version with the following template: `vCurrentVersion`
