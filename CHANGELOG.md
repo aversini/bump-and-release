@@ -1,3 +1,12 @@
+# [1.0.0](https://github.com/aversini/bump-and-release/compare/v0.7.0...v1.0.0) (2021-01-29)
+
+
+### Features
+
+* **bump:** adding separator between semver versions and custom ([b2eec52](https://github.com/aversini/bump-and-release/commit/b2eec528c87360275cfcd2d49abc970b72104374))
+
+
+
 # [0.7.0](https://github.com/aversini/bump-and-release/compare/v0.6.0...v0.7.0) (2021-01-28)
 
 
