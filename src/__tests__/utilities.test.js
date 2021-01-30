@@ -58,7 +58,7 @@ describe("when testing for individual utilities wtih no logging side-effects", (
     const { stdout, stderr } = await runCommand("echo 'hello'", {
       verbose: true,
     });
-    expect(stdout).toBe("hello");
+    expect(stdout).toBe("'hello'");
     expect(stderr).toBe("");
   });
 

@@ -2,12 +2,11 @@ const _ = require("lodash");
 const inquirer = require("inquirer");
 const kleur = require("kleur");
 const ora = require("ora");
-const util = require("util");
 const memoizeOne = require("async-memoize-one");
 const fs = require("fs-extra");
 const path = require("path");
 const semver = require("semver");
-const exec = util.promisify(require("child_process").exec);
+const execa = require("execa");
 const TeenyLogger = require("teeny-logger");
 const logger = new TeenyLogger({
   boring: process.env.NODE_ENV === "test",
@@ -138,10 +137,8 @@ const runCommand = async (
   }
 ) => {
   try {
-    const { stdout, stderr } = await exec(command);
-    return verbose
-      ? { stdout: stdout.replace(/\n$/, ""), stderr }
-      : stdout.replace(/\n$/, "");
+    const { stdout, stderr } = await execa.command(command);
+    return verbose ? { stdout, stderr } : stdout;
   } catch (err) {
     if (!ignoreError) {
       throw new Error(kleur.red(err));
