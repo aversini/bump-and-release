@@ -529,12 +529,11 @@ describe("when testing for utilities with logging side-effects", () => {
     const remote = "github";
 
     displayIntroductionMessage({ version, branch, remote });
-    expect(mockLog).toHaveBeenCalledWith(`Current version is ${version}`);
-    expect(mockLog).toHaveBeenCalledWith(`Current branch is ${branch}`);
-    expect(mockLog).toHaveBeenCalledWith(
-      `Current tracking remote is ${remote}`
-    );
-    expect(mockLogWarning).toHaveBeenCalledWith("Dry-run mode is ON");
+    const res = `Current version is 123
+Current branch is master
+Current tracking remote is github
+Dry-run mode is ON`;
+    expect(mockLog).toHaveBeenCalledWith(res);
   });
 
   it("should display an introduction message with dry-run mode OFF", async () => {
@@ -545,11 +544,10 @@ describe("when testing for utilities with logging side-effects", () => {
     global["dry-run"] = false;
 
     displayIntroductionMessage({ version, branch, remote });
-    expect(mockLog).toHaveBeenCalledWith(`Current version is ${version}`);
-    expect(mockLog).toHaveBeenCalledWith(`Current branch is ${branch}`);
-    expect(mockLog).toHaveBeenCalledWith(
-      `Current tracking remote is ${remote}`
-    );
+    const res = `Current version is 123
+Current branch is master
+Current tracking remote is github`;
+    expect(mockLog).toHaveBeenCalledWith(res);
     expect(mockLogWarning).not.toHaveBeenCalledWith("Dry-run mode is ON");
     global["dry-run"] = orginalDryRun;
   });

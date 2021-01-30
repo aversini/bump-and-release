@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "async-memoize-one": "1.0.1",
+    "boxen": "5.0.0",
     "execa": "5.0.0",
     "fs-extra": "9.1.0",
     "inquirer": "7.3.3",

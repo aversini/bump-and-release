@@ -41,9 +41,10 @@ describe("when testing for bump with logging side-effects", () => {
 
   it("should run release with the default configuration and dry-run mode is ON", async () => {
     await release(defaultConfig);
-    expect(mockLog).toHaveBeenCalledWith(
-      `Current version is ${currentVersion}`
-    );
-    expect(mockLogWarning).toHaveBeenCalledWith("Dry-run mode is ON");
+    const res = `Current version is ${currentVersion}
+Current branch is master
+Current tracking remote is github/master
+Dry-run mode is ON`;
+    expect(mockLog).toHaveBeenCalledWith(res);
   });
 });

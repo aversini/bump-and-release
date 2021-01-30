@@ -1,12 +1,13 @@
 const _ = require("lodash");
 const inquirer = require("inquirer");
-const kleur = require("kleur");
+const { red, yellow, cyan } = require("kleur");
 const ora = require("ora");
 const memoizeOne = require("async-memoize-one");
 const fs = require("fs-extra");
 const path = require("path");
 const semver = require("semver");
 const execa = require("execa");
+const boxen = require("boxen");
 const TeenyLogger = require("teeny-logger");
 const logger = new TeenyLogger({
   boring: process.env.NODE_ENV === "test",
@@ -93,15 +94,25 @@ const displayErrorMessages = (errorMsg) => {
 };
 
 const displayIntroductionMessage = ({ version, branch, remote }) => {
+  const dryRunMsg = global["dry-run"]
+    ? `\n${yellow("Dry-run mode is ON")}`
+    : "";
+  const msg = `Current version is ${cyan(version)}
+Current branch is ${cyan(branch)}
+Current tracking remote is ${cyan(remote)}${dryRunMsg}`;
+
   logger.log();
-  logger.log(`Current version is ${kleur.cyan(version)}`);
-  logger.log(`Current branch is ${kleur.cyan(branch)}`);
-  logger.log(`Current tracking remote is ${kleur.cyan(remote)}`);
+  logger.log(
+    process.env.NODE_ENV === "test"
+      ? msg
+      : /* istanbul ignore next */
+        boxen(msg, {
+          padding: 1,
+          align: "center",
+          borderColor: "yellow",
+        })
+  );
   logger.log();
-  if (global["dry-run"]) {
-    logger.warn("Dry-run mode is ON");
-    logger.log();
-  }
 };
 
 const shouldContinue = (goodToGo) => {
@@ -119,7 +130,7 @@ const readPackageJSON = async () => {
     return packageJson;
   } catch (err) {
     /* istanbul ignore next */
-    throw new Error(kleur.red(`Unable to parse package.json\n${err}`));
+    throw new Error(red(`Unable to parse package.json\n${err}`));
   }
 };
 const memoizedPackageJSON = memoizeOne(readPackageJSON);
@@ -141,7 +152,7 @@ const runCommand = async (
     return verbose ? { stdout, stderr } : stdout;
   } catch (err) {
     if (!ignoreError) {
-      throw new Error(kleur.red(err));
+      throw new Error(red(err));
     }
   }
 };
