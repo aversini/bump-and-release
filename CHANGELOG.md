@@ -1,3 +1,12 @@
+# [1.1.0](https://github.com/aversini/bump-and-release/compare/v1.0.0...v1.1.0) (2021-01-30)
+
+
+### Features
+
+* migrating to teeny-logger for consistent logging on the console ([11a1e3d](https://github.com/aversini/bump-and-release/commit/11a1e3d74b074eaf3df5594e24b64a1fb4b4efc5))
+
+
+
 # [1.0.0](https://github.com/aversini/bump-and-release/compare/v0.7.0...v1.0.0) (2021-01-29)
 
 
