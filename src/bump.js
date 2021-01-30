@@ -11,7 +11,7 @@ const {
   displayConfirmation,
   displayIntroductionMessage,
   getNextPossibleVersions,
-  log,
+  logger,
   memoizedPackageJSON,
   pkg,
   preflightValidation,
@@ -113,7 +113,7 @@ module.exports = async (config) => {
       )}"`
     );
   } else {
-    log(
+    logger.log(
       `git add -A && git commit -a -m "${config.bump.commitMessage(
         newVersion
       )}"`
@@ -126,7 +126,7 @@ module.exports = async (config) => {
       spinner.text = "Pushing to remote...";
       await runCommand("git push --no-verify");
     } else {
-      log("git push --no-verify");
+      logger.log("git push --no-verify");
     }
   }
 

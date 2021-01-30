@@ -4,7 +4,7 @@ const {
   upperFirst,
   displayConfirmation,
   displayIntroductionMessage,
-  log,
+  logger,
   preflightValidation,
   prepareReleaseTasks,
   shouldContinue,
@@ -24,13 +24,13 @@ const runReleaseTasks = async (commands) => {
     try {
       /* istanbul ignore else */
       if (command["dry-run"]) {
-        log(command.action);
+        logger.log(command.action);
       } else if (!error) {
         if (command.verbose) {
           const { stdout } = await runCommand(command.action, {
             verbose: true,
           });
-          log(`\n${stdout}\n`);
+          logger.log(`\n${stdout}\n`);
         } else {
           await runCommand(command.action);
         }

@@ -4,20 +4,38 @@ const currentVersion = require("../../package.json").version;
 const release = require("../release");
 const defaultConfig = require("../defaults");
 
-let mockExit, spyExit, mockLog, spyLog, mockPrompt, spyPrompt;
+let mockLog,
+  mockLogError,
+  mockLogWarning,
+  mockPrompt,
+  spyExit,
+  spyLog,
+  spyLogError,
+  spyLogWarning,
+  spyPrompt,
+  mockExit;
 
 describe("when testing for bump with logging side-effects", () => {
   beforeEach(() => {
     mockExit = jest.fn();
-    spyExit = jest.spyOn(process, "exit").mockImplementation(mockExit);
     mockLog = jest.fn();
-    spyLog = jest.spyOn(console, "log").mockImplementation(mockLog);
+    mockLogError = jest.fn();
+    mockLogWarning = jest.fn();
     mockPrompt = jest.fn(() => ({ goodToGo: true }));
+
+    spyExit = jest.spyOn(process, "exit").mockImplementation(mockExit);
+    spyLog = jest.spyOn(console, "log").mockImplementation(mockLog);
+    spyLogError = jest.spyOn(console, "error").mockImplementation(mockLogError);
+    spyLogWarning = jest
+      .spyOn(console, "warn")
+      .mockImplementation(mockLogWarning);
     spyPrompt = jest.spyOn(inquirer, "prompt").mockImplementation(mockPrompt);
   });
   afterEach(() => {
     spyExit.mockRestore();
     spyLog.mockRestore();
+    spyLogError.mockRestore();
+    spyLogWarning.mockRestore();
     spyPrompt.mockRestore();
   });
 
@@ -26,6 +44,6 @@ describe("when testing for bump with logging side-effects", () => {
     expect(mockLog).toHaveBeenCalledWith(
       `Current version is ${currentVersion}`
     );
-    expect(mockLog).toHaveBeenCalledWith("Dry-run mode is ON");
+    expect(mockLogWarning).toHaveBeenCalledWith("Dry-run mode is ON");
   });
 });

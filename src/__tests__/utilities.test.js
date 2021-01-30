@@ -7,7 +7,7 @@ const {
   displayIntroductionMessage,
   displayErrorMessages,
   getNextPossibleVersions,
-  log,
+  logger,
   mergeConfigurations,
   preflightValidation,
   prepareReleaseTasks,
@@ -20,7 +20,16 @@ const {
 
 const deepEqual = require("./helpers/deepEqual");
 
-let mockExit, spyExit, mockLog, spyLog, mockPrompt, spyPrompt;
+let mockLog,
+  mockLogError,
+  mockLogWarning,
+  mockPrompt,
+  spyExit,
+  spyLog,
+  spyLogError,
+  spyLogWarning,
+  spyPrompt,
+  mockExit;
 
 describe("when testing for individual utilities wtih no logging side-effects", () => {
   it("should convert the first letter of a sentence to uppercase", async () => {
@@ -473,39 +482,48 @@ describe("when testing for configuration merging wtih no logging side-effects", 
 describe("when testing for utilities with logging side-effects", () => {
   beforeEach(() => {
     mockExit = jest.fn();
-    spyExit = jest.spyOn(process, "exit").mockImplementation(mockExit);
     mockLog = jest.fn();
-    spyLog = jest.spyOn(console, "log").mockImplementation(mockLog);
+    mockLogError = jest.fn();
+    mockLogWarning = jest.fn();
     mockPrompt = jest.fn(() => ({ goodToGo: true }));
+
+    spyExit = jest.spyOn(process, "exit").mockImplementation(mockExit);
+    spyLog = jest.spyOn(console, "log").mockImplementation(mockLog);
+    spyLogError = jest.spyOn(console, "error").mockImplementation(mockLogError);
+    spyLogWarning = jest
+      .spyOn(console, "warn")
+      .mockImplementation(mockLogWarning);
     spyPrompt = jest.spyOn(inquirer, "prompt").mockImplementation(mockPrompt);
   });
   afterEach(() => {
     spyExit.mockRestore();
     spyLog.mockRestore();
+    spyLogError.mockRestore();
+    spyLogWarning.mockRestore();
     spyPrompt.mockRestore();
   });
 
   it("should log a simple message", async () => {
-    log("Hello World");
+    logger.log("Hello World");
     expect(mockLog).toHaveBeenCalledWith("Hello World");
-    log();
-    expect(mockLog).toHaveBeenCalledWith();
+    logger.log();
+    expect(mockLog).toHaveBeenCalledWith("");
   });
 
   it("should display the proper error messages and exit with 0", async () => {
     displayErrorMessages(["message one", "message two"]);
-    expect(mockLog).toHaveBeenCalledWith("message one");
-    expect(mockLog).toHaveBeenCalledWith("message two");
+    expect(mockLogError).toHaveBeenCalledWith("message one");
+    expect(mockLogError).toHaveBeenCalledWith("message two");
     expect(mockExit).toHaveBeenCalledWith(0);
   });
 
   it("should not display any error messages and should not exit with 0", async () => {
     displayErrorMessages();
-    expect(mockLog).not.toHaveBeenCalled();
+    expect(mockLogError).not.toHaveBeenCalled();
     expect(mockExit).not.toHaveBeenCalled();
   });
 
-  it("should display and introduction message with dry-run mode ON", async () => {
+  it("should display an introduction message with dry-run mode ON", async () => {
     const version = 123;
     const branch = "master";
     const remote = "github";
@@ -516,10 +534,10 @@ describe("when testing for utilities with logging side-effects", () => {
     expect(mockLog).toHaveBeenCalledWith(
       `Current tracking remote is ${remote}`
     );
-    expect(mockLog).toHaveBeenCalledWith("Dry-run mode is ON");
+    expect(mockLogWarning).toHaveBeenCalledWith("Dry-run mode is ON");
   });
 
-  it("should display and introduction message with dry-run mode OFF", async () => {
+  it("should display an introduction message with dry-run mode OFF", async () => {
     const version = 123;
     const branch = "master";
     const remote = "github";
@@ -532,7 +550,7 @@ describe("when testing for utilities with logging side-effects", () => {
     expect(mockLog).toHaveBeenCalledWith(
       `Current tracking remote is ${remote}`
     );
-    expect(mockLog).not.toHaveBeenCalledWith("Dry-run mode is ON");
+    expect(mockLogWarning).not.toHaveBeenCalledWith("Dry-run mode is ON");
     global["dry-run"] = orginalDryRun;
   });
 
@@ -562,15 +580,15 @@ describe("when testing for utilities with logging side-effects", () => {
     expect(remote).toBe("github/master");
     expect(version).toBe(currentVersion);
 
-    expect(mockLog).toHaveBeenCalledWith(
+    expect(mockLogError).toHaveBeenCalledWith(
       'Working branch must be one of "maaaaster".'
     );
-    expect(mockLog).toHaveBeenCalledWith(
+    expect(mockLogError).toHaveBeenCalledWith(
       'Tracking remote must be one of "github/maaaaster".'
     );
   });
 
-  it("", async () => {
+  it("should display a confirmation message", async () => {
     const res = await displayConfirmation("confirmation message");
     expect(mockLog).toHaveBeenCalledWith("confirmation message");
     expect(res).toBe(true);

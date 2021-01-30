@@ -8,6 +8,10 @@ const fs = require("fs-extra");
 const path = require("path");
 const semver = require("semver");
 const exec = util.promisify(require("child_process").exec);
+const TeenyLogger = require("teeny-logger");
+const logger = new TeenyLogger({
+  boring: process.env.NODE_ENV === "test",
+});
 
 const pkg = path.join(process.cwd(), "package.json");
 
@@ -44,11 +48,6 @@ class Spinner {
   }
 }
 
-const log = (...args) => {
-  // eslint-disable-next-line no-console
-  console.log(...args);
-};
-
 const upperFirst = (str) => str[0].toUpperCase() + str.slice(1);
 
 /**
@@ -75,11 +74,9 @@ const displayConfirmation = async (msg) => {
     default: true,
   };
 
-  /* eslint-disable no-console */
-  console.log();
-  console.log(msg);
-  console.log();
-  /* eslint-enable */
+  logger.log();
+  logger.log(msg);
+  logger.log();
 
   const answers = await inquirer.prompt(questions);
   return answers.goodToGo;
@@ -87,30 +84,30 @@ const displayConfirmation = async (msg) => {
 
 const displayErrorMessages = (errorMsg) => {
   if (errorMsg && errorMsg.length) {
-    log();
+    logger.log();
     errorMsg.forEach(function (msg) {
-      log(kleur.red(msg));
+      logger.error(msg);
     });
-    log();
+    logger.log();
     process.exit(0);
   }
 };
 
 const displayIntroductionMessage = ({ version, branch, remote }) => {
-  log();
-  log(`Current version is ${kleur.cyan(version)}`);
-  log(`Current branch is ${kleur.cyan(branch)}`);
-  log(`Current tracking remote is ${kleur.cyan(remote)}`);
-  log();
+  logger.log();
+  logger.log(`Current version is ${kleur.cyan(version)}`);
+  logger.log(`Current branch is ${kleur.cyan(branch)}`);
+  logger.log(`Current tracking remote is ${kleur.cyan(remote)}`);
+  logger.log();
   if (global["dry-run"]) {
-    log(kleur.yellow("Dry-run mode is ON"));
-    log();
+    logger.warn("Dry-run mode is ON");
+    logger.log();
   }
 };
 
 const shouldContinue = (goodToGo) => {
   if (!goodToGo) {
-    log("\nBye then!");
+    logger.log("\nBye then!");
     process.exit(0);
   }
   return true;
@@ -299,7 +296,7 @@ module.exports = {
   displayErrorMessages,
   displayIntroductionMessage,
   getNextPossibleVersions,
-  log,
+  logger,
   memoizedPackageJSON,
   mergeConfigurations,
   pkg,
