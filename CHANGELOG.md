@@ -1,3 +1,22 @@
+# [1.2.0](https://github.com/aversini/bump-and-release/compare/v1.1.0...v1.2.0) (2021-01-30)
+
+
+### Bug Fixes
+
+* using execa for simpler child_process command manipulation ([fa4a406](https://github.com/aversini/bump-and-release/commit/fa4a4069286a0046f76e8116a4b0fc9ead503824))
+
+
+### Features
+
+* using boxen for a better summary display ([03df431](https://github.com/aversini/bump-and-release/commit/03df43101f55f91922781109c0cef837e77056ce))
+
+
+### Reverts
+
+* reverting move to execa since it's breaking some git commands ([1a46359](https://github.com/aversini/bump-and-release/commit/1a46359bf52dd45f160cba27099e5936b074e12a))
+
+
+
 # [1.1.0](https://github.com/aversini/bump-and-release/compare/v1.0.0...v1.1.0) (2021-01-30)
 
 
