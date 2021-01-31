@@ -26,5 +26,11 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Add remote
+        run: git remote add github https://github.com/aversini/bump-and-release.git
+      - name: Git pull master
+        run: git pull github master
+      - name: Set a tracking remote
+        run: git branch -u github/master
       - run: npm ci
       - run: npm run test:coverage
