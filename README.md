@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/bump-and-release.svg)](https://badge.fury.io/js/bump-and-release)
 <a href="https://david-dm.org/aversini/bump-and-release"><img src="https://david-dm.org/aversini/bump-and-release.svg" alt="Dependency Status"></a>
-<a href="https://david-dm.org/aversini/bump-and-release/?type=dev"><img src="https://david-dm.org/aversini/bump-and-release/dev-status.svg" alt="devDependency Status"></a> [![Build Status](https://travis-ci.com/aversini/bump-and-release.svg?branch=master)](https://travis-ci.com/aversini/bump-and-release)
+<a href="https://david-dm.org/aversini/bump-and-release/?type=dev"><img src="https://david-dm.org/aversini/bump-and-release/dev-status.svg" alt="devDependency Status"></a> !![Build Status](https://github.com/aversini/bump-and-release/workflows/coverage/badge.svg)
 
 > Bump and Release is a tiny command line helper to bump and release packages.
 
