@@ -5,15 +5,12 @@ const {
   BUMP_TYPE_CUSTOM,
   displayConfirmation,
   displayIntroductionMessage,
-  displayErrorMessages,
   getNextPossibleVersions,
   logger,
   mergeConfigurations,
   preflightValidation,
   prepareReleaseTasks,
-  runCommand,
   shouldContinue,
-  upperFirst,
   // private methods
   _getCurrentVersion,
 } = require("../utilities");
@@ -32,10 +29,6 @@ let mockLog,
   mockExit;
 
 describe("when testing for individual utilities wtih no logging side-effects", () => {
-  it("should convert the first letter of a sentence to uppercase", async () => {
-    expect(upperFirst("this is a test")).toBe("This is a test");
-  });
-
   it("should extract the version from the package.json file", async () => {
     const version = await _getCurrentVersion();
     expect(version).toBe(currentVersion);
@@ -52,30 +45,6 @@ describe("when testing for individual utilities wtih no logging side-effects", (
     expect(branch).toBe("master");
     expect(remote).toBe("github/master");
     expect(version).toBe(currentVersion);
-  });
-
-  it("should return the command output via stdout", async () => {
-    const { stdout, stderr } = await runCommand("echo 'hello'", {
-      verbose: true,
-    });
-    expect(stdout).toBe("hello");
-    expect(stderr).toBe("");
-  });
-
-  it("should not return the command output via stdout", async () => {
-    const { stdout, stderr } = await runCommand("echo 'hello'");
-    expect(stdout).not.toBeDefined();
-    expect(stderr).not.toBeDefined();
-  });
-
-  it("should throw an error if the command fails", async () => {
-    await expect(runCommand("not-a-command")).rejects.toBeTruthy();
-  });
-
-  it("should not throw an error even if the command fails", async () => {
-    await expect(
-      runCommand("not-a-command", { ignoreError: true })
-    ).resolves.toBeUndefined();
   });
 
   it("should return the corresponding choices for the next possible versions", async () => {
@@ -508,19 +477,6 @@ describe("when testing for utilities with logging side-effects", () => {
     expect(mockLog).toHaveBeenCalledWith("Hello World");
     logger.log();
     expect(mockLog).toHaveBeenCalledWith("");
-  });
-
-  it("should display the proper error messages and exit with 0", async () => {
-    displayErrorMessages(["message one", "message two"]);
-    expect(mockLogError).toHaveBeenCalledWith("message one");
-    expect(mockLogError).toHaveBeenCalledWith("message two");
-    expect(mockExit).toHaveBeenCalledWith(0);
-  });
-
-  it("should not display any error messages and should not exit with 0", async () => {
-    displayErrorMessages();
-    expect(mockLogError).not.toHaveBeenCalled();
-    expect(mockExit).not.toHaveBeenCalled();
   });
 
   it("should display an introduction message with dry-run mode ON", async () => {

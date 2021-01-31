@@ -3,6 +3,7 @@ const inquirer = require("inquirer");
 const kleur = require("kleur");
 const semver = require("semver");
 const path = require("path");
+const { runCommand, Spinner } = require("teeny-js-utilities");
 
 const pkgLock = path.join(process.cwd(), "package-lock.json");
 
@@ -16,8 +17,6 @@ const {
   pkg,
   preflightValidation,
   shouldContinue,
-  Spinner,
-  runCommand,
 } = require("./utilities");
 
 /* istanbul ignore next */

@@ -1,55 +1,23 @@
 const _ = require("lodash");
 const inquirer = require("inquirer");
 const { red, yellow, cyan } = require("kleur");
-const ora = require("ora");
-const util = require("util");
 const memoizeOne = require("async-memoize-one");
 const fs = require("fs-extra");
 const path = require("path");
 const semver = require("semver");
 const boxen = require("boxen");
-const exec = util.promisify(require("child_process").exec);
 const TeenyLogger = require("teeny-logger");
+const { displayErrorMessages, runCommand } = require("teeny-js-utilities");
+
 const logger = new TeenyLogger({
   boring: process.env.NODE_ENV === "test",
 });
 
 const pkg = path.join(process.cwd(), "package.json");
 
-const ONE_SECOND = 1000;
 const COMMIT_MESSAGE = "git commit";
 const PUSH_MESSAGE = "push";
 const BUMP_TYPE_CUSTOM = "custom";
-
-/* istanbul ignore next */
-class Spinner {
-  constructor(msg) {
-    this.spinner = ora({
-      isSilent: process.env.NODE_ENV === "test",
-    });
-    this.spinner.start(msg);
-  }
-
-  set text(msg) {
-    this.spinner.text = msg;
-  }
-
-  start(msg) {
-    this.spinner.start(msg);
-  }
-
-  fail(msg) {
-    this.spinner.fail(msg);
-  }
-
-  succeed(msg) {
-    setTimeout(() => {
-      this.spinner.succeed(msg);
-    }, ONE_SECOND);
-  }
-}
-
-const upperFirst = (str) => str[0].toUpperCase() + str.slice(1);
 
 /**
  *
@@ -81,17 +49,6 @@ const displayConfirmation = async (msg) => {
 
   const answers = await inquirer.prompt(questions);
   return answers.goodToGo;
-};
-
-const displayErrorMessages = (errorMsg) => {
-  if (errorMsg && errorMsg.length) {
-    logger.log();
-    errorMsg.forEach(function (msg) {
-      logger.error(msg);
-    });
-    logger.log();
-    process.exit(0);
-  }
 };
 
 const displayIntroductionMessage = ({ version, branch, remote }) => {
@@ -139,25 +96,6 @@ const memoizedPackageJSON = memoizeOne(readPackageJSON);
 const getCurrentVersion = async () => {
   const packageJson = await memoizedPackageJSON();
   return packageJson.version;
-};
-
-const runCommand = async (
-  command,
-  { verbose: verbose, ignoreError: ignoreError } = {
-    verbose: false,
-    ignoreError: false,
-  }
-) => {
-  try {
-    const { stdout, stderr } = await exec(command);
-    return verbose
-      ? { stdout: stdout.replace(/\n$/, ""), stderr }
-      : stdout.replace(/\n$/, "");
-  } catch (err) {
-    if (!ignoreError) {
-      throw new Error(red(err));
-    }
-  }
 };
 
 const preflightValidation = async (config) => {
@@ -302,9 +240,7 @@ module.exports = {
   COMMIT_MESSAGE,
   PUSH_MESSAGE,
   // public methods
-  upperFirst,
   displayConfirmation,
-  displayErrorMessages,
   displayIntroductionMessage,
   getNextPossibleVersions,
   logger,
@@ -313,9 +249,7 @@ module.exports = {
   pkg,
   preflightValidation,
   prepareReleaseTasks,
-  runCommand,
   shouldContinue,
-  Spinner,
   // private methods
   _getCurrentVersion: getCurrentVersion,
 };

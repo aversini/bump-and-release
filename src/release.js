@@ -1,15 +1,14 @@
+const { runCommand, Spinner, upperFirst } = require("teeny-js-utilities");
+
 const {
   COMMIT_MESSAGE,
   PUSH_MESSAGE,
-  upperFirst,
   displayConfirmation,
   displayIntroductionMessage,
   logger,
   preflightValidation,
   prepareReleaseTasks,
   shouldContinue,
-  Spinner,
-  runCommand,
 } = require("./utilities");
 
 const runReleaseTasks = async (commands) => {
