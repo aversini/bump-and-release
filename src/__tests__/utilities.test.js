@@ -1,4 +1,5 @@
 const inquirer = require("inquirer");
+const { deepEqual } = require("teeny-js-utilities");
 const currentVersion = require("../../package.json").version;
 
 const {
@@ -14,8 +15,6 @@ const {
   // private methods
   _getCurrentVersion,
 } = require("../utilities");
-
-const deepEqual = require("./helpers/deepEqual");
 
 let mockLog,
   mockLogError,
