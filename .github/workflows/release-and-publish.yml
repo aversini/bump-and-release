@@ -11,7 +11,10 @@
 #
 # See configuration/latest for more information.
 #
-name: "Create Release"
+# Once the GitHub release has been created, the package will
+# be published to npm.
+#
+name: "Release & Publish"
 
 on:
   push:
@@ -23,6 +26,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Setup Node 12
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Checkout code
+        run: npm ci
+      - name: Test code
+        run: npm test
       - name: Create Release
         id: create_release
         uses: actions/create-release@latest
@@ -34,3 +45,16 @@ jobs:
           body_path: ./LATEST.md
           draft: false
           prerelease: false
+
+  publish-npm:
+    needs: release_version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: https://registry.npmjs.org/
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_publish_token}}
