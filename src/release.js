@@ -60,7 +60,7 @@ const runReleaseTasks = async (commands) => {
 module.exports = async (config) => {
   const { branch, remote, version } = await preflightValidation(config);
 
-  displayIntroductionMessage({ version, branch, remote });
+  displayIntroductionMessage({ branch, remote, version });
 
   const { instruction, commands } = prepareReleaseTasks(config, version);
 

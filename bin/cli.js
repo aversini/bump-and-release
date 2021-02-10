@@ -11,17 +11,17 @@ const {
 
 const yargs = require("yargs")
   .options({
-    type: {
-      alias: "t",
-      describe: "Type of action",
-      choices: ["bump", "release"],
-    },
     config: {
       alias: "c",
       describe: "Configuration file",
     },
     "dry-run": {
       describe: "Do not run the commands",
+    },
+    type: {
+      alias: "t",
+      choices: ["bump", "release"],
+      describe: "Type of action",
     },
   })
   .hide("version").argv;

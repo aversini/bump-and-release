@@ -53,15 +53,15 @@ const updatePackageJson = async (newVersion) => {
 
 const promptForBumpType = async ({ current, config }) => {
   const { defaultChoice, choices } = getNextPossibleVersions({
-    current,
     config,
+    current,
   });
   const questions = {
-    type: "list",
-    name: "action",
+    choices,
     default: defaultChoice,
     message: "Please choose one of the following options for the next version",
-    choices,
+    name: "action",
+    type: "list",
   };
 
   const answer = await inquirer.prompt(questions);
@@ -69,9 +69,9 @@ const promptForBumpType = async ({ current, config }) => {
   /* istanbul ignore if */
   if (answer.action === BUMP_TYPE_CUSTOM) {
     const newAnswer = await inquirer.prompt({
-      type: "input",
-      name: "version",
       message: "Type a valid semver version",
+      name: "version",
+      type: "input",
       validate(val) {
         if (!val.length || !semver.valid(val)) {
           return "Please enter a valid semver version, or <CTRL-C> to quit...";
@@ -88,9 +88,9 @@ const promptForBumpType = async ({ current, config }) => {
 module.exports = async (config) => {
   const { branch, remote, version } = await preflightValidation(config);
 
-  displayIntroductionMessage({ version, branch, remote });
+  displayIntroductionMessage({ branch, remote, version });
 
-  const newVersion = await promptForBumpType({ current: version, config });
+  const newVersion = await promptForBumpType({ config, current: version });
   const goodToGo = await displayConfirmation(
     `About to bump version from ${kleur.cyan(version)} to ${kleur.cyan(
       newVersion

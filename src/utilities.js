@@ -37,10 +37,10 @@ const mergeConfigurations = (defaultConfig, customConfig) =>
 
 const displayConfirmation = async (msg) => {
   const questions = {
-    type: "confirm",
-    name: "goodToGo",
-    message: "Do you want to continue?",
     default: true,
+    message: "Do you want to continue?",
+    name: "goodToGo",
+    type: "confirm",
   };
 
   logger.log();
@@ -65,9 +65,9 @@ Current tracking remote is ${cyan(remote)}${dryRunMsg}`;
       ? msg
       : /* istanbul ignore next */
         boxen(msg, {
-          padding: 1,
           align: "center",
           borderColor: "yellow",
+          padding: 1,
         })
   );
   logger.log();
@@ -161,11 +161,11 @@ const getNextPossibleVersions = ({ current, config }) => {
         choices.push(new inquirer.Separator());
       }
       choices.push({
-        value: nextVersion,
-        short: next.type,
         name: next.prompt
           ? next.prompt(next.type, nextVersion)
           : `[${next.type}] ... bump to ${nextVersion}`,
+        short: next.type,
+        value: nextVersion,
       });
     }
   });
@@ -181,9 +181,9 @@ const prepareReleaseTasks = (config, version) => {
       const name = task.name ? task.name : task.command;
       commands.push({
         action: task.command,
+        "dry-run": global["dry-run"],
         name,
         verbose: task.verbose ? task.verbose : false,
-        "dry-run": global["dry-run"],
       });
       names.push(name);
     });
@@ -192,15 +192,15 @@ const prepareReleaseTasks = (config, version) => {
   const stageMsg = "git stage";
   commands.push({
     action: `git add -A`,
-    name: stageMsg,
     "dry-run": global["dry-run"],
+    name: stageMsg,
   });
   names.push(stageMsg);
 
   commands.push({
     action: `git commit -a -m "${config.release.commitMessage(version)}"`,
-    name: COMMIT_MESSAGE,
     "dry-run": global["dry-run"],
+    name: COMMIT_MESSAGE,
   });
   names.push(COMMIT_MESSAGE);
 
@@ -209,8 +209,8 @@ const prepareReleaseTasks = (config, version) => {
     const name = "tag";
     commands.push({
       action: `git tag -a ${tagTask.prefix}${version} -m "version ${version}"`,
-      name,
       "dry-run": global["dry-run"],
+      name,
     });
     names.push(name);
   }
@@ -221,8 +221,8 @@ const prepareReleaseTasks = (config, version) => {
       : "git push --no-verify";
     commands.push({
       action,
-      name: PUSH_MESSAGE,
       "dry-run": global["dry-run"],
+      name: PUSH_MESSAGE,
     });
     names.push(PUSH_MESSAGE);
   }
@@ -235,6 +235,8 @@ const prepareReleaseTasks = (config, version) => {
 };
 
 module.exports = {
+  // private methods
+  _getCurrentVersion: getCurrentVersion,
   // constants
   BUMP_TYPE_CUSTOM,
   COMMIT_MESSAGE,
@@ -250,6 +252,4 @@ module.exports = {
   preflightValidation,
   prepareReleaseTasks,
   shouldContinue,
-  // private methods
-  _getCurrentVersion: getCurrentVersion,
 };
