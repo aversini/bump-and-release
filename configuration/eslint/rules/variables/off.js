@@ -10,10 +10,12 @@ module.exports = {
     "no-label-var": "off",
     // disallow specified global variables
     "no-restricted-globals": "off",
-    // disallow identifiers from shadowing restricted names
-    "no-shadow-restricted-names": "off",
+
     // disallow variable declarations from shadowing variables declared in the outer scope
     "no-shadow": "off",
+
+    // disallow identifiers from shadowing restricted names
+    "no-shadow-restricted-names": "off",
     // disallow the use of undeclared variables unless mentioned in /*global */ comments
     "no-undef": "off",
     // disallow initializing variables to undefined

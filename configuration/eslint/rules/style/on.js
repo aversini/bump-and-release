@@ -61,17 +61,17 @@ module.exports = {
       "error",
       2,
       {
-        VariableDeclarator: 1,
-        outerIIFEBody: 1,
         FunctionDeclaration: {
-          parameters: 1,
           body: 1,
+          parameters: 1,
         },
         FunctionExpression: {
-          parameters: 1,
           body: 1,
+          parameters: 1,
         },
         SwitchCase: 1,
+        VariableDeclarator: 1,
+        outerIIFEBody: 1,
       },
     ],
     /*
@@ -96,8 +96,8 @@ module.exports = {
     "lines-around-directive": [
       "error",
       {
-        before: "always",
         after: "always",
+        before: "always",
       },
     ],
     // enforce a maximum depth that blocks can be nested
@@ -196,9 +196,9 @@ module.exports = {
     "one-var": [
       "warn",
       {
-        var: "always",
-        let: "always",
         const: "never",
+        let: "always",
+        var: "always",
       },
     ],
     // require or disallow newlines around variable declarations
@@ -251,8 +251,8 @@ module.exports = {
       "warn",
       {
         anonymous: "always",
-        named: "never",
         asyncArrow: "always",
+        named: "never",
       },
     ],
     // enforce consistent spacing inside parentheses
@@ -263,9 +263,9 @@ module.exports = {
     "space-unary-ops": [
       "error",
       {
-        words: true,
         nonwords: false,
         overrides: {},
+        words: true,
       },
     ],
     /*
@@ -276,16 +276,17 @@ module.exports = {
       "error",
       "always",
       {
-        line: {
+        block: {
+          balanced: true,
+
           exceptions: ["-", "+"],
           // space here to support sprockets directives
           markers: ["=", "!"],
         },
-        block: {
+        line: {
           exceptions: ["-", "+"],
           // space here to support sprockets directives
           markers: ["=", "!"],
-          balanced: true,
         },
       },
     ],

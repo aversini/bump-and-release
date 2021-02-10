@@ -1,20 +1,9 @@
 module.exports = {
-  parser: "babel-eslint",
-  root: true,
   env: {
-    es6: true,
-    browser: true,
+    browser: false,
     builtin: true,
+    es6: true,
     mocha: true,
-  },
-  globals: {
-    chai: false,
-    jest: false,
-  },
-  parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
-    },
   },
   extends: [
     "./rules/reset.js",
@@ -25,4 +14,25 @@ module.exports = {
     "./rules/es6/on.js",
     "./rules/node/on.js",
   ],
+  globals: {
+    chai: false,
+    jest: false,
+  },
+  parser: "babel-eslint",
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+  },
+  plugins: ["sort-keys-fix"],
+  root: true,
+  rules: {
+    "sort-keys-fix/sort-keys-fix": [
+      "warn",
+      "asc",
+      {
+        natural: true,
+      },
+    ],
+  },
 };

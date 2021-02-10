@@ -31,8 +31,8 @@ module.exports = {
     "generator-star-spacing": [
       "error",
       {
-        before: false,
         after: true,
+        before: false,
       },
     ],
     // disallow modifying variables of class declarations

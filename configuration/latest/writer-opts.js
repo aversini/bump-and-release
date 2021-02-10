@@ -1,5 +1,6 @@
 "use strict";
 
+/* eslint-disable no-magic-numbers */
 const compareFunc = require("compare-func");
 const Q = require("q");
 const readFile = Q.denodeify(require("fs").readFile);
@@ -7,6 +8,11 @@ const resolve = require("path").resolve;
 
 function getWriterOpts() {
   return {
+    commitGroupsSort: "title",
+    commitsSort: ["scope", "subject"],
+    groupBy: "type",
+    noteGroupsSort: "title",
+    notesSort: compareFunc,
     transform: (commit, context) => {
       let discard = true;
       const issues = [];
@@ -86,11 +92,6 @@ function getWriterOpts() {
 
       return commit;
     },
-    groupBy: "type",
-    commitGroupsSort: "title",
-    commitsSort: ["scope", "subject"],
-    noteGroupsSort: "title",
-    notesSort: compareFunc,
   };
 }
 

@@ -16,10 +16,12 @@ module.exports = {
     "no-dupe-keys": "off",
     // disallow duplicate case labels
     "no-duplicate-case": "off",
-    // disallow empty character classes in regular expressions
-    "no-empty-character-class": "off",
+
     // disallow empty block statements
     "no-empty": "off",
+
+    // disallow empty character classes in regular expressions
+    "no-empty-character-class": "off",
     // disallow reassigning exceptions in catch clauses
     "no-ex-assign": "off",
     // disallow unnecessary boolean casts

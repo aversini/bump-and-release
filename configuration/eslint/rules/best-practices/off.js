@@ -77,17 +77,22 @@ module.exports = {
     "no-multi-spaces": "off",
     // disallow multiline strings
     "no-multi-str": "off",
-    // disallow new operators with the Function object
-    "no-new-func": "off",
-    // disallow new operators with the String, Number, and Boolean objects
-    "no-new-wrappers": "off",
+
     // disallow new operators outside of assignments or comparisons
     "no-new": "off",
+
+    // disallow new operators with the Function object
+    "no-new-func": "off",
+
+    // disallow new operators with the String, Number, and Boolean objects
+    "no-new-wrappers": "off",
     "no-obj-calls": "off",
-    // disallow octal escape sequences in string literals
-    "no-octal-escape": "off",
+
     // disallow octal literals
     "no-octal": "off",
+
+    // disallow octal escape sequences in string literals
+    "no-octal-escape": "off",
     // disallow reassigning function parameters
     "no-param-reassign": "off",
     // disallow the use of the __proto__ property
