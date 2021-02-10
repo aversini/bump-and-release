@@ -1,8 +1,9 @@
 # Bump and Release
 
-[![npm version](https://badge.fury.io/js/bump-and-release.svg)](https://badge.fury.io/js/bump-and-release)
-<a href="https://david-dm.org/aversini/bump-and-release"><img src="https://david-dm.org/aversini/bump-and-release.svg" alt="Dependency Status"></a>
-<a href="https://david-dm.org/aversini/bump-and-release/?type=dev"><img src="https://david-dm.org/aversini/bump-and-release/dev-status.svg" alt="devDependency Status"></a> ![Build Status](https://github.com/aversini/bump-and-release/workflows/coverage/badge.svg) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/150b9c96510247b7917a6be9510e3395)](https://app.codacy.com/gh/aversini/bump-and-release?utm_source=github.com&utm_medium=referral&utm_content=aversini/bump-and-release&utm_campaign=Badge_Grade)
+![npm](https://img.shields.io/npm/v/bump-and-release?label=version&logo=npm)
+![David](https://img.shields.io/david/aversini/bump-and-release?logo=npm)
+![David](https://img.shields.io/david/dev/aversini/bump-and-release?logo=npm)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/aversini/bump-and-release/coverage?label=coverage&logo=github)
 
 > Bump and Release is a tiny command line helper to bump and release packages.
 
