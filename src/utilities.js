@@ -197,7 +197,7 @@ const prepareReleaseTasks = (config, version) => {
   names.push(stageMsg);
 
   commands.push({
-    action: `git commit -a -m "${config.release.commitMessage(version)}"`,
+    action: `git commit -m "${config.release.commitMessage(version)}"`,
     "dry-run": global["dry-run"],
     name: COMMIT_MESSAGE,
   });

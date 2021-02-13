@@ -51,56 +51,56 @@ describe("when testing for individual utilities wtih no logging side-effects", (
       bump: {
         nextPossible: [
           {
-            type: "prerelease",
             enabled: false,
+            type: "prerelease",
           },
           {
+            prompt: (type, version) =>
+              `[${type}] ... bump to next ${type} (${version})`,
             type: "patch",
-            prompt: (type, version) =>
-              `[${type}] ... bump to next ${type} (${version})`,
           },
           {
+            prompt: (type, version) =>
+              `[${type}] ... bump to next ${type} (${version})`,
             type: "minor",
-            prompt: (type, version) =>
-              `[${type}] ... bump to next ${type} (${version})`,
           },
           {
-            type: "major",
             default: true,
+            type: "major",
           },
           {
-            type: "custom",
             prompt: (type) => `[${type}] .. enter your own custom version`,
+            type: "custom",
           },
         ],
       },
     };
     const expectedChoices = [
       {
-        value: "1.0.2",
-        short: "patch",
         name: "[patch] ... bump to next patch (1.0.2)",
+        short: "patch",
+        value: "1.0.2",
       },
       {
-        value: "1.1.0",
-        short: "minor",
         name: "[minor] ... bump to next minor (1.1.0)",
+        short: "minor",
+        value: "1.1.0",
       },
       {
-        value: "2.0.0",
-        short: "major",
         name: "[major] ... bump to 2.0.0",
+        short: "major",
+        value: "2.0.0",
       },
       new inquirer.Separator(),
       {
-        value: BUMP_TYPE_CUSTOM,
-        short: "custom",
         name: "[custom] .. enter your own custom version",
+        short: "custom",
+        value: BUMP_TYPE_CUSTOM,
       },
     ];
     const { choices, defaultChoice } = getNextPossibleVersions({
-      current: "1.0.1",
       config,
+      current: "1.0.1",
     });
     expect(deepEqual(choices, expectedChoices)).toBe(true);
     // eslint-disable-next-line no-magic-numbers
@@ -110,19 +110,19 @@ describe("when testing for individual utilities wtih no logging side-effects", (
   it("should return the corresponding commands for the corresponding configuration", async () => {
     const config = {
       release: {
-        local: false,
         commitMessage: (version) => `chore: tagging release ${version}`,
+        local: false,
         prerelease: [
           {
             command: "npm run test",
           },
           {
-            name: "generate changelog",
             command: "npm run changelog",
+            name: "generate changelog",
           },
           {
-            name: "run bundlesize",
             command: "npm run bundlesize",
+            name: "run bundlesize",
             verbose: true,
           },
         ],
@@ -136,37 +136,37 @@ describe("when testing for individual utilities wtih no logging side-effects", (
     const expectedCommands = [
       {
         action: "npm run test",
+        "dry-run": true,
         name: "npm run test",
         verbose: false,
-        "dry-run": true,
       },
       {
         action: "npm run changelog",
+        "dry-run": true,
         name: "generate changelog",
         verbose: false,
-        "dry-run": true,
       },
       {
         action: "npm run bundlesize",
+        "dry-run": true,
         name: "run bundlesize",
         verbose: true,
-        "dry-run": true,
       },
-      { action: "git add -A", name: "git stage", "dry-run": true },
+      { action: "git add -A", "dry-run": true, name: "git stage" },
       {
-        action: 'git commit -a -m "chore: tagging release 6.6.6"',
-        name: "git commit",
+        action: 'git commit -m "chore: tagging release 6.6.6"',
         "dry-run": true,
+        name: "git commit",
       },
       {
         action: 'git tag -a v6.6.6 -m "version 6.6.6"',
-        name: "tag",
         "dry-run": true,
+        name: "tag",
       },
       {
         action: "git push --no-verify && git push --tags --no-verify",
-        name: "push",
         "dry-run": true,
+        name: "push",
       },
     ];
 
@@ -179,19 +179,19 @@ describe("when testing for individual utilities wtih no logging side-effects", (
   it("should return the corresponding commands with no tagging", async () => {
     const config = {
       release: {
-        local: false,
         commitMessage: (version) => `chore: releasing version ${version}`,
+        local: false,
         prerelease: [
           {
             command: "npm run test",
           },
           {
-            name: "generate changelog",
             command: "npm run changelog",
+            name: "generate changelog",
           },
           {
-            name: "run bundlesize",
             command: "npm run bundlesize",
+            name: "run bundlesize",
             verbose: true,
           },
         ],
@@ -205,32 +205,32 @@ describe("when testing for individual utilities wtih no logging side-effects", (
     const expectedCommands = [
       {
         action: "npm run test",
+        "dry-run": true,
         name: "npm run test",
         verbose: false,
-        "dry-run": true,
       },
       {
         action: "npm run changelog",
+        "dry-run": true,
         name: "generate changelog",
         verbose: false,
-        "dry-run": true,
       },
       {
         action: "npm run bundlesize",
+        "dry-run": true,
         name: "run bundlesize",
         verbose: true,
-        "dry-run": true,
       },
-      { action: "git add -A", name: "git stage", "dry-run": true },
+      { action: "git add -A", "dry-run": true, name: "git stage" },
       {
-        action: 'git commit -a -m "chore: releasing version 6.6.6"',
-        name: "git commit",
+        action: 'git commit -m "chore: releasing version 6.6.6"',
         "dry-run": true,
+        name: "git commit",
       },
       {
         action: "git push --no-verify",
-        name: "push",
         "dry-run": true,
+        name: "push",
       },
     ];
 
@@ -243,19 +243,19 @@ describe("when testing for individual utilities wtih no logging side-effects", (
   it("should return the corresponding commands with no tagging, and local is true", async () => {
     const config = {
       release: {
-        local: true,
         commitMessage: (version) => `chore: releasing version ${version}`,
+        local: true,
         prerelease: [
           {
             command: "npm run test",
           },
           {
-            name: "generate changelog",
             command: "npm run changelog",
+            name: "generate changelog",
           },
           {
-            name: "run bundlesize",
             command: "npm run bundlesize",
+            name: "run bundlesize",
             verbose: true,
           },
         ],
@@ -269,27 +269,27 @@ describe("when testing for individual utilities wtih no logging side-effects", (
     const expectedCommands = [
       {
         action: "npm run test",
+        "dry-run": true,
         name: "npm run test",
         verbose: false,
-        "dry-run": true,
       },
       {
         action: "npm run changelog",
+        "dry-run": true,
         name: "generate changelog",
         verbose: false,
-        "dry-run": true,
       },
       {
         action: "npm run bundlesize",
+        "dry-run": true,
         name: "run bundlesize",
         verbose: true,
-        "dry-run": true,
       },
-      { action: "git add -A", name: "git stage", "dry-run": true },
+      { action: "git add -A", "dry-run": true, name: "git stage" },
       {
-        action: 'git commit -a -m "chore: releasing version 6.6.6"',
-        name: "git commit",
+        action: 'git commit -m "chore: releasing version 6.6.6"',
         "dry-run": true,
+        name: "git commit",
       },
     ];
 
@@ -306,20 +306,20 @@ describe("when testing for configuration merging wtih no logging side-effects", 
       bump: {
         nextPossible: [
           {
-            type: "minor",
             default: true,
+            type: "minor",
           },
         ],
       },
       release: {
         prerelease: [
           {
-            name: "run tests",
             command: "npm run test",
+            name: "run tests",
           },
           {
-            name: "generate changelog",
             command: "npm run changelog",
+            name: "generate changelog",
           },
         ],
       },
@@ -332,20 +332,20 @@ describe("when testing for configuration merging wtih no logging side-effects", 
       bump: {
         nextPossible: [
           {
-            type: "minor",
             default: true,
+            type: "minor",
           },
         ],
       },
       release: {
         prerelease: [
           {
-            name: "run tests",
             command: "npm run test",
+            name: "run tests",
           },
           {
-            name: "generate changelog",
             command: "npm run changelog",
+            name: "generate changelog",
           },
         ],
       },
@@ -354,20 +354,20 @@ describe("when testing for configuration merging wtih no logging side-effects", 
       bump: {
         nextPossible: [
           {
-            type: "minor",
             default: false,
+            type: "minor",
           },
         ],
       },
       release: {
         prerelease: [
           {
-            name: "run tests",
             command: "npm run test",
+            name: "run tests",
           },
           {
-            name: "generate changelog",
             command: "npm run changelog",
+            name: "generate changelog",
           },
         ],
       },
@@ -380,8 +380,8 @@ describe("when testing for configuration merging wtih no logging side-effects", 
       bump: {
         nextPossible: [
           {
-            type: "minor",
             default: true,
+            type: "minor",
           },
         ],
       },
@@ -390,8 +390,8 @@ describe("when testing for configuration merging wtih no logging side-effects", 
       bump: {
         nextPossible: [
           {
-            type: "minor",
             default: false,
+            type: "minor",
           },
         ],
       },
@@ -405,8 +405,8 @@ describe("when testing for configuration merging wtih no logging side-effects", 
       bump: {
         nextPossible: [
           {
-            type: "minor",
             default: false,
+            type: "minor",
           },
         ],
       },
@@ -415,8 +415,8 @@ describe("when testing for configuration merging wtih no logging side-effects", 
       bump: {
         nextPossible: [
           {
-            type: "minor",
             default: true,
+            type: "minor",
           },
         ],
       },
@@ -432,8 +432,8 @@ describe("when testing for configuration merging wtih no logging side-effects", 
     expect(
       deepEqual(res.bump.nextPossible, [
         {
-          type: "minor",
           default: true,
+          type: "minor",
         },
       ])
     ).toBe(true);
@@ -483,7 +483,7 @@ describe("when testing for utilities with logging side-effects", () => {
     const branch = "master";
     const remote = "github";
 
-    displayIntroductionMessage({ version, branch, remote });
+    displayIntroductionMessage({ branch, remote, version });
     const res = `Current version is 123
 Current branch is master
 Current tracking remote is github
@@ -498,7 +498,7 @@ Dry-run mode is ON`;
     const orginalDryRun = global["dry-run"];
     global["dry-run"] = false;
 
-    displayIntroductionMessage({ version, branch, remote });
+    displayIntroductionMessage({ branch, remote, version });
     const res = `Current version is 123
 Current branch is master
 Current tracking remote is github`;
