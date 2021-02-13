@@ -108,12 +108,9 @@ const preflightValidation = async (config) => {
   const remote = await runCommand(
     "git rev-parse --symbolic-full-name --abbrev-ref @{u}"
   );
-  const dirty = await runCommand(
-    "git diff-index --name-only HEAD --exit-code",
-    {
-      ignoreError: true,
-    }
-  );
+  const dirty = await runCommand("git diff --no-ext-diff --quiet --exit-code", {
+    ignoreError: true,
+  });
   const version = await getCurrentVersion();
 
   const errorMessage = [];
