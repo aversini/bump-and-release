@@ -127,7 +127,7 @@ const preflightValidation = async (config) => {
     );
   }
   /* istanbul ignore next */
-  if (dirty.exitCode > 0 && !config.bump.local) {
+  if (dirty.exitCode > 0 && !config.bump.local && !config.release.local) {
     errorMessage.push(
       `Working dir must be clean (no uncommited files).\n${dirty.shortMessage}`
     );
