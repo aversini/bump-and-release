@@ -57,7 +57,7 @@
     "kleur": "4.1.4",
     "lodash": "4.17.20",
     "semver": "7.3.4",
-    "teeny-js-utilities": "^2.0.0",
+    "teeny-js-utilities": "^2.0.1",
     "teeny-logger": "^0.2.0",
     "yargs": "16.2.0"
   }
