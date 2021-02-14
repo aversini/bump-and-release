@@ -1,30 +1,72 @@
 #!/usr/bin/env node
 
 const path = require("path");
+const meow = require("meow");
+const {
+  displayErrorMessages,
+  meowOptionsHelper,
+  meowParserHelper,
+} = require("teeny-js-utilities");
+
+const PrettyError = require("pretty-error");
+const pe = new PrettyError();
+// Automatically prettifying all exceptions that are logged
+pe.start();
+
 const bump = require("../src/bump");
 const release = require("../src/release");
 const defaults = require("../src/defaults");
-const {
-  displayErrorMessages,
-  mergeConfigurations,
-} = require("../src/utilities");
+const { mergeConfigurations } = require("../src/utilities");
 
-const yargs = require("yargs")
-  .options({
+const { helpText, options } = meowOptionsHelper({
+  flags: {
     config: {
       alias: "c",
-      describe: "Configuration file",
+      description: "Configuration file",
+      type: "string",
     },
-    "dry-run": {
-      describe: "Do not run the commands",
+    dryRun: {
+      description: "Do not actually run the commands",
+      type: "boolean",
+    },
+    help: {
+      alias: "h",
+      description: "Display help instructions",
+      type: "boolean",
     },
     type: {
       alias: "t",
-      choices: ["bump", "release"],
-      describe: "Type of action",
+      description: "Action to run: (bump) or (release)",
+      isRequired: (flags) => !flags.help && !flags.version,
+      type: "string",
     },
-  })
-  .hide("version").argv;
+    version: {
+      alias: "v",
+      description: "Output the current version",
+      type: "boolean",
+    },
+  },
+  usage: true,
+});
+const cli = meow(helpText, options);
+meowParserHelper({
+  cli,
+  restrictions: [
+    {
+      exit: 1,
+      message: (x) =>
+        `Error: option '-t, --type <string>' argument '${x.type}' is invalid. Valid options are "bump" or "release".`,
+      test: (x) =>
+        typeof x.type === "string" && x.type !== "bump" && x.type !== "release",
+    },
+    {
+      exit: 1,
+      message: (x) =>
+        `Error: option '-c, --config <string>' argument '${x.config}' is invalid.`,
+      test: (x) => !x.config,
+    },
+  ],
+});
 
 let customCfg;
 
@@ -36,12 +78,12 @@ try {
 }
 
 try {
-  if (yargs.config) {
+  if (cli.flags.config) {
     // trying user provided config from the CLI
-    customCfg = require(path.join(process.cwd(), yargs.config));
+    customCfg = require(path.join(process.cwd(), cli.flags.config));
   }
 } catch (e) {
-  displayErrorMessages([`Unable to read config file ${yargs.config}`, e]);
+  displayErrorMessages([`Unable to read config file ${cli.flags.config}`]);
 }
 
 /**
@@ -50,11 +92,11 @@ try {
  */
 const config = mergeConfigurations(defaults, customCfg);
 
-if (yargs["dry-run"]) {
+if (cli.flags.dryRun) {
   global["dry-run"] = true;
 }
 
-switch (yargs.type) {
+switch (cli.flags.type) {
   case "bump":
     bump(config);
     break;

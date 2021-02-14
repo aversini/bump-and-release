@@ -7,7 +7,11 @@ const path = require("path");
 const semver = require("semver");
 const boxen = require("boxen");
 const TeenyLogger = require("teeny-logger");
-const { displayErrorMessages, runCommand } = require("teeny-js-utilities");
+const {
+  displayErrorMessages,
+  runCommand,
+  shallowMerge,
+} = require("teeny-js-utilities");
 
 const logger = new TeenyLogger({
   boring: process.env.NODE_ENV === "test",
@@ -19,21 +23,16 @@ const COMMIT_MESSAGE = "git commit";
 const PUSH_MESSAGE = "push";
 const BUMP_TYPE_CUSTOM = "custom";
 
-/**
- *
- * WARNING: this method is nasty! It will alter the original
- * objects... This needs to be fixed, but for now, it's what it is.
- *
- */
+const customizer = (def, cust, key) => {
+  if (key === "nextPossible") {
+    return _.orderBy(
+      _.values(_.merge(_.keyBy(def, "type"), _.keyBy(cust, "type"))),
+      ["pos"]
+    );
+  }
+};
 const mergeConfigurations = (defaultConfig, customConfig) =>
-  _.mergeWith(defaultConfig, customConfig, (def, cust, key) => {
-    if (key === "nextPossible") {
-      return _.orderBy(
-        _.values(_.merge(_.keyBy(def, "type"), _.keyBy(cust, "type"))),
-        ["pos"]
-      );
-    }
-  });
+  shallowMerge(defaultConfig, customConfig, customizer);
 
 const displayConfirmation = async (msg) => {
   const questions = {
