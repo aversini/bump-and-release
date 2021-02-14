@@ -59,7 +59,6 @@
     "pretty-error": "3.0.3",
     "semver": "7.3.4",
     "teeny-js-utilities": "^2.0.1",
-    "teeny-logger": "^0.2.0",
-    "yargs": "16.2.0"
+    "teeny-logger": "^0.2.0"
   }
 }
