@@ -1,3 +1,12 @@
+## [1.2.3](https://github.com/aversini/bump-and-release/compare/v1.2.2...v1.2.3) (2021-02-23)
+
+
+### Bug Fixes
+
+* option "-c" is not required ([f9afc18](https://github.com/aversini/bump-and-release/commit/f9afc18d4ca5478cc906ee79c81f45fd803b272a))
+
+
+
 ## [1.2.2](https://github.com/aversini/bump-and-release/compare/v1.2.1...v1.2.2) (2021-02-13)
 
 
