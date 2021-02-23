@@ -142,6 +142,12 @@ module.exports = {
     nextPossible: [
       {
         /**
+         * { number }
+         * The position of this prompt within other prompts.
+         * The indexing starts at 0.
+         */
+        pos: 0,
+        /**
          * { string }
          * The type of release as defined in node-semver.
          * Possible values are major, premajor, minor,
