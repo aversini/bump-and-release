@@ -59,12 +59,6 @@ meowParserHelper({
       test: (x) =>
         typeof x.type === "string" && x.type !== "bump" && x.type !== "release",
     },
-    {
-      exit: 1,
-      message: (x) =>
-        `Error: option '-c, --config <string>' argument '${x.config}' is invalid.`,
-      test: (x) => !x.config,
-    },
   ],
 });
 
