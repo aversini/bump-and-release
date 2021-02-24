@@ -22,6 +22,16 @@ const pkg = path.join(process.cwd(), "package.json");
 const COMMIT_MESSAGE = "git commit";
 const PUSH_MESSAGE = "push";
 const BUMP_TYPE_CUSTOM = "custom";
+const BUMP_TYPE_SEPARATOR = "separator";
+const DEFAULT_BUMP_POSITION = {
+  custom: 16,
+  major: 15,
+  minor: 13,
+  patch: 11,
+  premajor: 14,
+  preminor: 12,
+  prepatch: 10,
+};
 
 const customizer = (def, cust, key) => {
   if (key === "nextPossible") {
@@ -31,8 +41,20 @@ const customizer = (def, cust, key) => {
     );
   }
 };
-const mergeConfigurations = (defaultConfig, customConfig) =>
-  shallowMerge(defaultConfig, customConfig, customizer);
+
+const mergeConfigurations = (defaultConfig, customConfig) => {
+  const enhancedNextPossible = [];
+  const res = shallowMerge(defaultConfig, customConfig, customizer);
+
+  res.bump.nextPossible.forEach((nextPossible) => {
+    if (typeof nextPossible.pos === "undefined") {
+      nextPossible.pos = DEFAULT_BUMP_POSITION[nextPossible.type];
+    }
+    enhancedNextPossible.push(nextPossible);
+  });
+  res.bump.nextPossible = _.orderBy(enhancedNextPossible, ["pos"]);
+  return res;
+};
 
 const displayConfirmation = async (msg) => {
   const questions = {
@@ -152,19 +174,21 @@ const getNextPossibleVersions = ({ current, config }) => {
       }
       index++;
       const nextVersion =
-        next.type !== BUMP_TYPE_CUSTOM
+        next.type !== BUMP_TYPE_CUSTOM && next.type !== BUMP_TYPE_SEPARATOR
           ? semver.inc(current, next.type, next.identifier)
-          : BUMP_TYPE_CUSTOM;
-      if (next.type === BUMP_TYPE_CUSTOM) {
+          : next.type;
+
+      if (next.type === BUMP_TYPE_SEPARATOR) {
         choices.push(new inquirer.Separator());
+      } else {
+        choices.push({
+          name: next.prompt
+            ? next.prompt(next.type, nextVersion)
+            : `[${next.type}] ... bump to ${nextVersion}`,
+          short: next.type,
+          value: nextVersion,
+        });
       }
-      choices.push({
-        name: next.prompt
-          ? next.prompt(next.type, nextVersion)
-          : `[${next.type}] ... bump to ${nextVersion}`,
-        short: next.type,
-        value: nextVersion,
-      });
     }
   });
   return { choices, defaultChoice };

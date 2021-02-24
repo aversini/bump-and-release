@@ -118,7 +118,7 @@ module.exports = {
     /**
      * { boolean }
      * Flag indicating that all changes will remain
-     * local, preventing anything to be pushed.
+     * local, preventing anything to be pushed to the remote(s).
      */
     local: true,
     /**
@@ -138,6 +138,11 @@ module.exports = {
      * https://github.com/npm/node-semver
      * There is also an extra one called "custom", allowing
      * the user to enter a version manually.
+     *
+     * NOTE: there is a "special" case which is not a version.
+     * It's used to add a separator when all the values are
+     * displayed at the prompt.
+     * The value for the type is "separator".
      */
     nextPossible: [
       {
@@ -151,15 +156,15 @@ module.exports = {
          * { string }
          * The type of release as defined in node-semver.
          * Possible values are major, premajor, minor,
-         * preminor, patch, prepatch, or prerelease.
+         * preminor, patch, or prepatch.
+         * It also accepts "separator".
          */
-        type: "prerelease",
+        type: "prepatch",
         /**
          * { string }
          * Identifier to be used to prefix premajor,
-         * preminor, prepatch or prerelease version
-         * increments.
-         * For example: "beta", "rc", etc.
+         * preminor, or prepatch version increments.
+         * For example: "alpha", "beta", "rc", etc.
          */
         identifier: "beta",
         /**
@@ -200,6 +205,13 @@ module.exports = {
         type: "major",
         prompt: (type, version) =>
           `[${type}] ... bump to next ${type} (${version})`,
+      },
+      {
+        type: "separator",
+      },
+      {
+        type: "custom",
+        prompt: (type) => `[${type}] ... enter a custom version`,
       },
     ],
   },
@@ -260,6 +272,23 @@ module.exports = {
   },
 };
 ```
+
+### Next Available Versions
+
+The possible "next" versions to be offered to the user at the prompt are the same that are accepted from method `inc()` of the [node-semver library](https://github.com/npm/node-semver).
+
+Here are possible values, assuming the current version of a package is 1.0.0.
+
+| type     | current version | new version  |
+| -------- | --------------- | ------------ |
+| prepatch | 1.0.0           | 1.0.1-beta.0 |
+| patch    | 1.0.0           | 1.0.1        |
+| preminor | 1.0.0           | 1.1.0-beta.0 |
+| minor    | 1.0.0           | 1.1.0        |
+| premajor | 1.0.0           | 2.0.0-beta.0 |
+| major    | 1.0.0           | 2.0.0        |
+
+**NOTE**: the "beta" identifier can be customized by providing the key "identifier".
 
 ## License
 

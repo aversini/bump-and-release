@@ -69,6 +69,9 @@ describe("when testing for individual utilities wtih no logging side-effects", (
             type: "major",
           },
           {
+            type: "separator",
+          },
+          {
             prompt: (type) => `[${type}] .. enter your own custom version`,
             type: "custom",
           },
@@ -433,6 +436,48 @@ describe("when testing for configuration merging wtih no logging side-effects", 
       deepEqual(res.bump.nextPossible, [
         {
           default: true,
+          pos: 13,
+          type: "minor",
+        },
+      ])
+    ).toBe(true);
+  });
+
+  it("should return a new configuration with the custom position intact", async () => {
+    const configA = {
+      bump: {
+        nextPossible: [
+          {
+            default: false,
+            type: "minor",
+          },
+        ],
+      },
+    };
+    const configB = {
+      bump: {
+        nextPossible: [
+          {
+            default: true,
+            pos: 42,
+            type: "minor",
+          },
+        ],
+      },
+    };
+    expect(deepEqual(configA, configB)).toBe(false);
+    /**
+     * This method will alter the objects, so no way to test for their
+     * equality AFTER the merge is done... Only thing we can do is test
+     * that the end result gets the right values.
+     */
+    const res = mergeConfigurations(configA, configB);
+
+    expect(
+      deepEqual(res.bump.nextPossible, [
+        {
+          default: true,
+          pos: 42,
           type: "minor",
         },
       ])

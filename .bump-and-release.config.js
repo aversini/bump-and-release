@@ -4,10 +4,10 @@ module.exports = {
       {
         pos: 0,
         default: true,
-        type: "prerelease",
+        type: "prepatch",
         identifier: "beta",
         prompt: (type, version) =>
-          `[${type}] ... development phase only (${version})`,
+          `[${type}] ..... development phase only (${version})`,
       },
       {
         pos: 1,
@@ -29,6 +29,10 @@ module.exports = {
       },
       {
         pos: 4,
+        type: "separator",
+      },
+      {
+        pos: 5,
         type: "custom",
         prompt: (type) => `[${type}] ....... enter a custom version`,
       },
