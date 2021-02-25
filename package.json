@@ -37,7 +37,7 @@
     "compare-func": "^2.0.0",
     "conventional-changelog-cli": "^2.1.1",
     "cross-env": "^7.0.3",
-    "eslint-config-prettier": "^7.2.0",
+    "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-sort-keys-fix": "^1.1.1",
     "eslint": "^7.20.0",
     "husky": "^5.0.9",
