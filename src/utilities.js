@@ -125,9 +125,12 @@ const preflightValidation = async (config) => {
    * Check if the current branch has a tracking remote
    * Check if the repo is dirty (uncommitted files)
    */
-  const branch = await runCommand("git rev-parse --abbrev-ref HEAD");
+  const branch = await runCommand("git rev-parse --abbrev-ref HEAD", {
+    ignoreError: true,
+  });
   const remote = await runCommand(
-    "git rev-parse --symbolic-full-name --abbrev-ref @{u}"
+    "git rev-parse --symbolic-full-name --abbrev-ref @{u}",
+    { ignoreError: true }
   );
   const dirty = await runCommand("git diff --no-ext-diff --quiet --exit-code", {
     ignoreError: true,
