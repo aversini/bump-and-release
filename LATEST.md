@@ -1,10 +1,5 @@
 
-### Features
+### Bug Fixes
 
-* locking the default bump version order and removing the automatic separator ([6453831](https://github.com/aversini/bump-and-release/commit/645383178a92649429af651125c48810425a7ddc))
-
-
-### BREAKING CHANGES
-
-* the separator is not displayed automatically anymore. It needs to be specifically requested in the configuration file via the type="separator" - see the README file for an example
+* **bump:** better error message when branches have no tracking remote ([835c2c9](https://github.com/aversini/bump-and-release/commit/835c2c9ba4cb77c4a0c352d8b0031eee57940639))
 

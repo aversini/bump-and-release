@@ -1,3 +1,12 @@
+## [2.0.1](https://github.com/aversini/bump-and-release/compare/v2.0.0...v2.0.1) (2021-03-05)
+
+
+### Bug Fixes
+
+* **bump:** better error message when branches have no tracking remote ([835c2c9](https://github.com/aversini/bump-and-release/commit/835c2c9ba4cb77c4a0c352d8b0031eee57940639))
+
+
+
 # [2.0.0](https://github.com/aversini/bump-and-release/compare/v1.2.3...v2.0.0) (2021-02-24)
 
 
