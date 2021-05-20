@@ -1,3 +1,12 @@
+# [2.1.0](https://github.com/aversini/bump-and-release/compare/v2.0.1...v2.1.0) (2021-05-20)
+
+
+### Features
+
+* adding support for "prebump" tasks ([e2f1db3](https://github.com/aversini/bump-and-release/commit/e2f1db3f89b68869aa000e34eefc3e4dd4cdfc01))
+
+
+
 ## [2.0.1](https://github.com/aversini/bump-and-release/compare/v2.0.0...v2.0.1) (2021-03-05)
 
 
