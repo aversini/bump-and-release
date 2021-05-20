@@ -10,6 +10,7 @@ const {
   logger,
   mergeConfigurations,
   preflightValidation,
+  prepareBumpTasks,
   prepareReleaseTasks,
   shouldContinue,
   // private methods
@@ -110,7 +111,7 @@ describe("when testing for individual utilities wtih no logging side-effects", (
     expect(defaultChoice).toBe(2);
   });
 
-  it("should return the corresponding commands for the corresponding configuration", async () => {
+  it("should return the corresponding release commands for the given configuration", async () => {
     const config = {
       release: {
         commitMessage: (version) => `chore: tagging release ${version}`,
@@ -179,7 +180,7 @@ describe("when testing for individual utilities wtih no logging side-effects", (
     expect(deepEqual(expectedCommands, commands)).toBe(true);
   });
 
-  it("should return the corresponding commands with no tagging", async () => {
+  it("should return the corresponding release commands with no tagging", async () => {
     const config = {
       release: {
         commitMessage: (version) => `chore: releasing version ${version}`,
@@ -243,7 +244,7 @@ describe("when testing for individual utilities wtih no logging side-effects", (
     expect(deepEqual(expectedCommands, commands)).toBe(true);
   });
 
-  it("should return the corresponding commands with no tagging, and local is true", async () => {
+  it("should return the corresponding release commands with no tagging, and local is true", async () => {
     const config = {
       release: {
         commitMessage: (version) => `chore: releasing version ${version}`,
@@ -298,6 +299,67 @@ describe("when testing for individual utilities wtih no logging side-effects", (
 
     expect(instruction).toBe(
       "npm run test, generate changelog, run bundlesize, git stage and git commit..."
+    );
+    expect(deepEqual(expectedCommands, commands)).toBe(true);
+  });
+
+  it("should return the corresponding bump commands for the given configuration", async () => {
+    const config = {
+      bump: {
+        commitMessage: (version) =>
+          `chore: bumping version for next release: ${version}`,
+        local: false,
+        prebump: [
+          {
+            command: "npm run test",
+          },
+          {
+            command: "npm run changelog",
+            name: "generate changelog",
+          },
+          {
+            command: "npm run bundlesize",
+            name: "run bundlesize",
+            verbose: true,
+          },
+        ],
+      },
+    };
+    const { commands, instruction } = prepareBumpTasks(config, "6.6.6");
+    const expectedCommands = [
+      {
+        action: "npm run test",
+        "dry-run": true,
+        name: "npm run test",
+        verbose: false,
+      },
+      {
+        action: "npm run changelog",
+        "dry-run": true,
+        name: "generate changelog",
+        verbose: false,
+      },
+      {
+        action: "npm run bundlesize",
+        "dry-run": true,
+        name: "run bundlesize",
+        verbose: true,
+      },
+      {
+        action:
+          'git add -A && git commit -a -m "chore: bumping version for next release: 6.6.6"',
+        "dry-run": true,
+        name: "git stage & commit",
+      },
+      {
+        action: "git push --no-verify",
+        "dry-run": true,
+        name: "push",
+      },
+    ];
+
+    expect(instruction).toBe(
+      "npm run test, generate changelog, run bundlesize, git stage & commit and push..."
     );
     expect(deepEqual(expectedCommands, commands)).toBe(true);
   });

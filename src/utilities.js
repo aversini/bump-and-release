@@ -201,6 +201,7 @@ const prepareReleaseTasks = (config, version) => {
   const tasks = config.release.prerelease;
   const commands = [];
   const names = [];
+
   if (tasks.length) {
     tasks.forEach((task) => {
       const name = task.name ? task.name : task.command;
@@ -259,6 +260,50 @@ const prepareReleaseTasks = (config, version) => {
   };
 };
 
+const prepareBumpTasks = (config, version) => {
+  const tasks = config.bump.prebump;
+  const commands = [];
+  const names = [];
+
+  if (tasks.length) {
+    tasks.forEach((task) => {
+      const name = task.name ? task.name : task.command;
+      commands.push({
+        action: task.command,
+        "dry-run": global["dry-run"],
+        name,
+        verbose: task.verbose ? task.verbose : false,
+      });
+      names.push(name);
+    });
+  }
+
+  const stageMsg = "git stage & commit";
+  commands.push({
+    action: `git add -A && git commit -a -m "${config.bump.commitMessage(
+      version
+    )}"`,
+    "dry-run": global["dry-run"],
+    name: stageMsg,
+  });
+  names.push(stageMsg);
+
+  if (!config.bump.local) {
+    commands.push({
+      action: `git push --no-verify`,
+      "dry-run": global["dry-run"],
+      name: PUSH_MESSAGE,
+    });
+    names.push(PUSH_MESSAGE);
+  }
+
+  return {
+    commands,
+    // eslint-disable-next-line no-useless-concat
+    instruction: `${names.join(", ").replace(/,([^,]*)$/, " and" + "$1")}...`,
+  };
+};
+
 module.exports = {
   // private methods
   _getCurrentVersion: getCurrentVersion,
@@ -275,6 +320,7 @@ module.exports = {
   mergeConfigurations,
   pkg,
   preflightValidation,
+  prepareBumpTasks,
   prepareReleaseTasks,
   shouldContinue,
 };

@@ -26,6 +26,7 @@ module.exports = {
         type: "custom",
       },
     ],
+    prebump: [],
   },
   release: {
     commitMessage: (version) => `chore: tagging release ${version}`,

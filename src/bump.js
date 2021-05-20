@@ -3,12 +3,14 @@ const inquirer = require("inquirer");
 const kleur = require("kleur");
 const semver = require("semver");
 const path = require("path");
-const { runCommand, Spinner } = require("teeny-js-utilities");
+const { runCommand, Spinner, upperFirst } = require("teeny-js-utilities");
 
 const pkgLock = path.join(process.cwd(), "package-lock.json");
 
 const {
   BUMP_TYPE_CUSTOM,
+  COMMIT_MESSAGE,
+  PUSH_MESSAGE,
   displayConfirmation,
   displayIntroductionMessage,
   getNextPossibleVersions,
@@ -16,6 +18,7 @@ const {
   memoizedPackageJSON,
   pkg,
   preflightValidation,
+  prepareBumpTasks,
   shouldContinue,
 } = require("./utilities");
 
@@ -85,49 +88,68 @@ const promptForBumpType = async ({ current, config }) => {
   }
 };
 
+const runBumpTasks = async (commands) => {
+  let error = false;
+  const spinner = new Spinner("Starting bump tasks...");
+
+  for (const command of commands) {
+    spinner.text =
+      command.name.toLowerCase() !== PUSH_MESSAGE.toLowerCase()
+        ? upperFirst(command.name)
+        : "Pushing to remote...";
+    try {
+      /* istanbul ignore else */
+      if (command["dry-run"]) {
+        logger.log(`\n${command.action}`);
+      } else if (!error) {
+        if (command.verbose) {
+          const { stdout } = await runCommand(command.action, {
+            verbose: true,
+          });
+          logger.log(`\n${stdout}\n`);
+        } else {
+          await runCommand(command.action);
+        }
+      }
+    } catch (e) {
+      /**
+       * git commit will trip an error when there is
+       * nothing to commit... The message is roughly:
+       * "nothing to commit, working tree clean" but
+       * it's interpreted as an error... so bypassing it.
+       */
+      /* istanbul ignore next */
+      if (command.name !== COMMIT_MESSAGE) {
+        spinner.fail(`Command ${command.name} failed:\n${e}`);
+        error = true;
+      }
+    }
+  }
+
+  /* istanbul ignore else */
+  if (!error) {
+    spinner.succeed("Bump task(s) complete!");
+  } else {
+    spinner.fail("Bump task(s) incomplete!");
+  }
+};
+
 module.exports = async (config) => {
   const { branch, remote, version } = await preflightValidation(config);
 
   displayIntroductionMessage({ branch, remote, version });
 
   const newVersion = await promptForBumpType({ config, current: version });
+  const { instruction, commands } = prepareBumpTasks(config, newVersion);
+
   const goodToGo = await displayConfirmation(
     `About to bump version from ${kleur.cyan(version)} to ${kleur.cyan(
       newVersion
-    )}`
+    )} with the following actions: ${instruction}`
   );
 
   shouldContinue(goodToGo);
 
-  const spinner = new Spinner("Updating package.json...");
-
   await updatePackageJson(newVersion);
-  spinner.text = "Git stage and commit...";
-
-  /* istanbul ignore if */
-  if (!global["dry-run"]) {
-    await runCommand(
-      `git add -A && git commit -a -m "${config.bump.commitMessage(
-        newVersion
-      )}"`
-    );
-  } else {
-    logger.log(
-      `git add -A && git commit -a -m "${config.bump.commitMessage(
-        newVersion
-      )}"`
-    );
-  }
-
-  if (!config.bump.local) {
-    /* istanbul ignore if */
-    if (!global["dry-run"]) {
-      spinner.text = "Pushing to remote...";
-      await runCommand("git push --no-verify");
-    } else {
-      logger.log("git push --no-verify");
-    }
-  }
-
-  spinner.succeed("Version bump complete!");
+  await runBumpTasks(commands);
 };
