@@ -13,4 +13,4 @@ updates:
       - dependency-name: "inquirer"
         versions: ["8.x"]
       - dependency-name: "husky"
-        versions: ["5.x"]
+        versions: ["5.x", "6.x"]
