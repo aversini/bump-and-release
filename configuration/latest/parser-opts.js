@@ -3,5 +3,6 @@ module.exports = {
   headerPattern: /^(\w*)(?:\((.*)\))?: (.*)$/,
   noteKeywords: ["BREAKING CHANGE"],
   revertCorrespondence: ["header", "hash"],
-  revertPattern: /^(?:Revert|revert:)\s"?([\s\S]+?)"?\s*This reverts commit (\w*)\./i,
+  revertPattern:
+    /^(?:Revert|revert:)\s"?([\s\S]+?)"?\s*This reverts commit (\w*)\./i,
 };
