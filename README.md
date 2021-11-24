@@ -117,6 +117,16 @@ module.exports = {
   bump: {
     /**
      * { boolean }
+     * Flag indicating that this is a monorepo handled by Lerna with
+     * non-independent version (all packages have the same version).
+     * Bump will read lerna.json to find the current version, and the
+     * location of all the packages listed in the prop "packages".
+     * Bump will try to update ALL the packages.json under each and
+     * every package listed in that prop.
+     */
+    lerna: true,
+    /**
+     * { boolean }
      * Flag indicating that all changes will remain
      * local, preventing anything to be pushed to the remote(s).
      */
@@ -156,14 +166,14 @@ module.exports = {
          * { string }
          * The type of release as defined in node-semver.
          * Possible values are major, premajor, minor,
-         * preminor, patch, or prepatch.
+         * preminor, patch, prepatch or prerelease.
          * It also accepts "separator".
          */
         type: "prepatch",
         /**
          * { string }
          * Identifier to be used to prefix premajor,
-         * preminor, or prepatch version increments.
+         * preminor, prerelease or prepatch version increments.
          * For example: "alpha", "beta", "rc", etc.
          */
         identifier: "beta",

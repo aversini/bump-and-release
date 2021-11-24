@@ -3,6 +3,7 @@ const inquirer = require("inquirer");
 const kleur = require("kleur");
 const semver = require("semver");
 const path = require("path");
+const fg = require("fast-glob");
 const { runCommand, Spinner, upperFirst } = require("teeny-js-utilities");
 
 const pkgLock = path.join(process.cwd(), "package-lock.json");
@@ -39,17 +40,53 @@ const updatePackageLockJSON = async (version) => {
 };
 
 /* istanbul ignore next */
-const updatePackageJson = async (newVersion) => {
+const updatePackageJson = async (newVersion, packages) => {
   if (!global["dry-run"]) {
-    const packageJson = await memoizedPackageJSON();
-    packageJson.version = newVersion;
-    try {
-      await fs.writeJSON(pkg, packageJson, {
-        spaces: 2,
+    if (packages && packages.length) {
+      // need to bump packages.json under packages...
+      packages.forEach((item) => {
+        const entries = item.endsWith("*")
+          ? fg.sync([`${item.replace("*", "**")}/package.json`], { deep: 2 })
+          : fg.sync([`${item}/package.json`], { deep: 1 });
+        entries.forEach((entry) => {
+          const customPkg = path.join(process.cwd(), entry);
+          const customPkgLock = path.join(
+            process.cwd(),
+            entry.replace("package.json", "package-lock.json")
+          );
+
+          try {
+            const packageJson = fs.readJSONSync(customPkg);
+            packageJson.version = newVersion;
+            fs.writeJSONSync(customPkg, packageJson, {
+              spaces: 2,
+            });
+          } catch (err) {
+            throw new Error(`Unable to update package.json\n${err}`);
+          }
+
+          try {
+            const packageLockJson = fs.readJSONSync(customPkgLock);
+            packageLockJson.version = newVersion;
+            fs.writeJSONSync(customPkgLock, packageLockJson, {
+              spaces: 2,
+            });
+          } catch (err) {
+            // ignoring as there may not be a lock file
+          }
+        });
       });
-      await updatePackageLockJSON(newVersion);
-    } catch (err) {
-      throw new Error(`Unable to update package.json\n${err}`);
+    } else {
+      const packageJson = await memoizedPackageJSON();
+      packageJson.version = newVersion;
+      try {
+        await fs.writeJSON(pkg, packageJson, {
+          spaces: 2,
+        });
+        await updatePackageLockJSON(newVersion);
+      } catch (err) {
+        throw new Error(`Unable to update package.json\n${err}`);
+      }
     }
   }
 };
@@ -148,7 +185,9 @@ module.exports = async (config, next) => {
       process.exit(0);
     }
   } else {
-    const { branch, remote, version } = await preflightValidation(config);
+    const { branch, remote, version, packages } = await preflightValidation(
+      config
+    );
 
     displayIntroductionMessage({ branch, remote, version });
 
@@ -162,7 +201,7 @@ module.exports = async (config, next) => {
     );
 
     shouldContinue(goodToGo);
-    await updatePackageJson(newVersion);
+    await updatePackageJson(newVersion, packages);
     await runBumpTasks(commands);
   }
 };

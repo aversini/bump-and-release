@@ -30,7 +30,7 @@ let mockLog,
 
 describe("when testing for individual utilities wtih no logging side-effects", () => {
   it("should extract the version from the package.json file", async () => {
-    const version = await _getCurrentVersion();
+    const version = await _getCurrentVersion({ bump: {} });
     expect(version).toBe(currentVersion);
   });
 

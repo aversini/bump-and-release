@@ -18,6 +18,7 @@ const logger = new TeenyLogger({
 });
 
 const pkg = path.join(process.cwd(), "package.json");
+const lernaPkg = path.join(process.cwd(), "lerna.json");
 
 const COMMIT_MESSAGE = "git commit";
 const PUSH_MESSAGE = "push";
@@ -114,9 +115,33 @@ const readPackageJSON = async () => {
 };
 const memoizedPackageJSON = memoizeOne(readPackageJSON);
 
-const getCurrentVersion = async () => {
-  const packageJson = await memoizedPackageJSON();
-  return packageJson.version;
+/* istanbul ignore next */
+const readLernaJSON = async () => {
+  let lernaJson;
+  try {
+    lernaJson = await fs.readJSON(lernaPkg);
+    return lernaJson;
+  } catch (err) {
+    throw new Error(red(`Unable to parse lerna.json\n${err}`));
+  }
+};
+const memoizedLernaJSON = memoizeOne(readLernaJSON);
+
+const getCurrentVersion = async (config) => {
+  /* istanbul ignore next */
+  const { version } = config.bump.lerna
+    ? await memoizedLernaJSON()
+    : await memoizedPackageJSON();
+  return version;
+};
+
+/* istanbul ignore next */
+const getPackagesLocation = async (config) => {
+  if (config.bump.lerna) {
+    const { packages } = await memoizedLernaJSON();
+    return packages;
+  }
+  return [];
 };
 
 const preflightValidation = async (config) => {
@@ -135,7 +160,9 @@ const preflightValidation = async (config) => {
   const dirty = await runCommand("git diff --no-ext-diff --quiet --exit-code", {
     ignoreError: true,
   });
-  const version = await getCurrentVersion();
+  const version = await getCurrentVersion(config);
+  /* istanbul ignore next */
+  const packages = config.bump.lerna ? await getPackagesLocation(config) : [];
 
   const errorMessage = [];
 
@@ -161,6 +188,7 @@ const preflightValidation = async (config) => {
 
   return {
     branch,
+    packages,
     remote,
     version,
   };

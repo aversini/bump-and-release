@@ -4,6 +4,7 @@ module.exports = {
   bump: {
     commitMessage: (version) =>
       `chore: bumping version for next release: ${version}`,
+    lerna: false,
     local: false,
     nextPossible: [
       {
