@@ -15,7 +15,9 @@ const {
   displayConfirmation,
   displayIntroductionMessage,
   getNextPossibleVersions,
+  lernaPkg,
   logger,
+  memoizedLernaJSON,
   memoizedPackageJSON,
   pkg,
   preflightValidation,
@@ -43,7 +45,20 @@ const updatePackageLockJSON = async (version) => {
 const updatePackageJson = async (newVersion, packages) => {
   if (!global["dry-run"]) {
     if (packages && packages.length) {
-      // need to bump packages.json under packages...
+      /**
+       * This is a monorepo with packages listed in lerna.json
+       * - Need to update lerna.json with the new version
+       * - Need to bump all packages.json under packages
+       */
+      const lernaJson = await memoizedLernaJSON();
+      lernaJson.version = newVersion;
+      try {
+        await fs.writeJSON(lernaPkg, lernaJson, {
+          spaces: 2,
+        });
+      } catch (err) {
+        throw new Error(`Unable to update lerna.json\n${err}`);
+      }
       packages.forEach((item) => {
         const entries = item.endsWith("*")
           ? fg.sync([`${item.replace("*", "**")}/package.json`], { deep: 2 })
