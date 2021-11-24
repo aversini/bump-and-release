@@ -184,7 +184,12 @@ const preflightValidation = async (config) => {
     );
   }
 
-  displayErrorMessages(errorMessage);
+  /* istanbul ignore else */
+  if (global["dry-run"]) {
+    displayErrorMessages(errorMessage, false);
+  } else {
+    displayErrorMessages(errorMessage);
+  }
 
   return {
     branch,
