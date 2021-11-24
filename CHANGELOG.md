@@ -1,3 +1,12 @@
+# [2.3.0](https://github.com/aversini/bump-and-release/compare/v2.2.1...v2.3.0) (2021-11-24)
+
+
+### Features
+
+* adding bare minimum support for monorepos with Lerna ([719f410](https://github.com/aversini/bump-and-release/commit/719f4106e38da2ec891ea4f2cb2d562c1e52a293))
+
+
+
 ## [2.2.1](https://github.com/aversini/bump-and-release/compare/v2.2.0...v2.2.1) (2021-11-24)
 
 
