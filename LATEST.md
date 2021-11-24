@@ -1,5 +1,5 @@
 
-### Features
+### Bug Fixes
 
-* adding bare minimum support for monorepos with Lerna ([719f410](https://github.com/aversini/bump-and-release/commit/719f4106e38da2ec891ea4f2cb2d562c1e52a293))
+* adding lerna.json to files that need to be updated ([0ce0c71](https://github.com/aversini/bump-and-release/commit/0ce0c71316a3a756ae6f6bda53bfb882dd34c04d))
 

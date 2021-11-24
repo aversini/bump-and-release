@@ -1,3 +1,12 @@
+## [2.3.1](https://github.com/aversini/bump-and-release/compare/v2.3.0...v2.3.1) (2021-11-24)
+
+
+### Bug Fixes
+
+* adding lerna.json to files that need to be updated ([0ce0c71](https://github.com/aversini/bump-and-release/commit/0ce0c71316a3a756ae6f6bda53bfb882dd34c04d))
+
+
+
 # [2.3.0](https://github.com/aversini/bump-and-release/compare/v2.2.1...v2.3.0) (2021-11-24)
 
 
