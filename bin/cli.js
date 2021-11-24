@@ -34,6 +34,12 @@ const { helpText, options } = meowOptionsHelper({
       description: "Display help instructions",
       type: "boolean",
     },
+    next: {
+      alias: "n",
+      description:
+        "Only applicable to bump: set the version at the CLI and do not prompt for confirmation",
+      type: "string",
+    },
     type: {
       alias: "t",
       description: "Action to run: (bump) or (release)",
@@ -92,7 +98,7 @@ if (cli.flags.dryRun) {
 
 switch (cli.flags.type) {
   case "bump":
-    bump(config);
+    bump(config, cli.flags.next);
     break;
 
   case "release":

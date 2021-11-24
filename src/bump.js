@@ -134,22 +134,35 @@ const runBumpTasks = async (commands) => {
   }
 };
 
-module.exports = async (config) => {
-  const { branch, remote, version } = await preflightValidation(config);
+module.exports = async (config, next) => {
+  /* istanbul ignore next */
+  if (next && typeof next === "string") {
+    if (typeof semver.valid(next) === "string") {
+      const newVersion = next;
+      const { commands } = prepareBumpTasks(config, newVersion);
+      await updatePackageJson(newVersion);
+      await runBumpTasks(commands);
+    } else {
+      logger.error(`Please use a valid semver version`);
+      logger.log(`next was: ${next}`);
+      process.exit(0);
+    }
+  } else {
+    const { branch, remote, version } = await preflightValidation(config);
 
-  displayIntroductionMessage({ branch, remote, version });
+    displayIntroductionMessage({ branch, remote, version });
 
-  const newVersion = await promptForBumpType({ config, current: version });
-  const { instruction, commands } = prepareBumpTasks(config, newVersion);
+    const newVersion = await promptForBumpType({ config, current: version });
+    const { instruction, commands } = prepareBumpTasks(config, newVersion);
 
-  const goodToGo = await displayConfirmation(
-    `About to bump version from ${kleur.cyan(version)} to ${kleur.cyan(
-      newVersion
-    )} with the following actions: ${instruction}`
-  );
+    const goodToGo = await displayConfirmation(
+      `About to bump version from ${kleur.cyan(version)} to ${kleur.cyan(
+        newVersion
+      )} with the following actions: ${instruction}`
+    );
 
-  shouldContinue(goodToGo);
-
-  await updatePackageJson(newVersion);
-  await runBumpTasks(commands);
+    shouldContinue(goodToGo);
+    await updatePackageJson(newVersion);
+    await runBumpTasks(commands);
+  }
 };

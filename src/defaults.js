@@ -1,6 +1,6 @@
 module.exports = {
   allowedBranches: ["master"],
-  allowedRemotes: ["github/master", "origin/master"],
+  allowedRemotes: ["github/master", "origin/master", "upstream/master"],
   bump: {
     commitMessage: (version) =>
       `chore: bumping version for next release: ${version}`,
