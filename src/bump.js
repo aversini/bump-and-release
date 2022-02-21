@@ -154,13 +154,18 @@ const runBumpTasks = async (commands) => {
       if (command["dry-run"]) {
         logger.log(`\n${command.action}`);
       } else if (!error) {
-        if (command.verbose) {
-          const { stdout } = await runCommand(command.action, {
-            verbose: true,
-          });
-          logger.log(`\n${stdout}\n`);
-        } else {
-          await runCommand(command.action);
+        if (typeof command.action === "string") {
+          // eslint-disable-next-line max-depth
+          if (command.verbose) {
+            const { stdout } = await runCommand(command.action, {
+              verbose: true,
+            });
+            logger.log(`\n${stdout}\n`);
+          } else {
+            await runCommand(command.action);
+          }
+        } else if (typeof command.action === "function") {
+          await command.action();
         }
       }
     } catch (e) {
