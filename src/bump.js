@@ -140,7 +140,7 @@ const promptForBumpType = async ({ current, config }) => {
   }
 };
 
-const runBumpTasks = async (commands) => {
+const runBumpTasks = async (commands, newVersion) => {
   let error = false;
   const spinner = new Spinner("Starting bump tasks...");
 
@@ -165,7 +165,7 @@ const runBumpTasks = async (commands) => {
             await runCommand(command.action);
           }
         } else if (typeof command.action === "function") {
-          await command.action();
+          await command.action(newVersion);
         }
       }
     } catch (e) {
@@ -198,7 +198,7 @@ module.exports = async (config, next) => {
       const newVersion = next;
       const { commands } = prepareBumpTasks(config, newVersion);
       await updatePackageJson(newVersion);
-      await runBumpTasks(commands);
+      await runBumpTasks(commands, newVersion);
     } else {
       logger.error(`Please use a valid semver version`);
       logger.log(`next was: ${next}`);
@@ -222,6 +222,6 @@ module.exports = async (config, next) => {
 
     shouldContinue(goodToGo);
     await updatePackageJson(newVersion, packages);
-    await runBumpTasks(commands);
+    await runBumpTasks(commands, newVersion);
   }
 };
