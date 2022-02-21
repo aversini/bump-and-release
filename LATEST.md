@@ -1,5 +1,5 @@
 
-### Bug Fixes
+### Features
 
-* adding lerna.json to files that need to be updated ([0ce0c71](https://github.com/aversini/bump-and-release/commit/0ce0c71316a3a756ae6f6bda53bfb882dd34c04d))
+* adding support for prebump and prerelease commands to be functions ([54a1979](https://github.com/aversini/bump-and-release/commit/54a1979404b6627314f78a1d46e9874c0473a200))
 

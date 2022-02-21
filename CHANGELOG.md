@@ -1,3 +1,12 @@
+# [2.4.0](https://github.com/aversini/bump-and-release/compare/v2.3.1...v2.4.0) (2022-02-21)
+
+
+### Features
+
+* adding support for prebump and prerelease commands to be functions ([54a1979](https://github.com/aversini/bump-and-release/commit/54a1979404b6627314f78a1d46e9874c0473a200))
+
+
+
 ## [2.3.1](https://github.com/aversini/bump-and-release/compare/v2.3.0...v2.3.1) (2021-11-24)
 
 
