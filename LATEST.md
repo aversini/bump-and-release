@@ -1,5 +1,5 @@
 
-### Features
+### Bug Fixes
 
-* adding support for prebump and prerelease commands to be functions ([54a1979](https://github.com/aversini/bump-and-release/commit/54a1979404b6627314f78a1d46e9874c0473a200))
+* forgot to pass newversion to prebump action if function ([ae11062](https://github.com/aversini/bump-and-release/commit/ae11062d129df85a0273f859acf3d4bc72101a31))
 

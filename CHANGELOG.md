@@ -1,3 +1,12 @@
+## [2.4.1](https://github.com/aversini/bump-and-release/compare/v2.4.0...v2.4.1) (2022-02-21)
+
+
+### Bug Fixes
+
+* forgot to pass newversion to prebump action if function ([ae11062](https://github.com/aversini/bump-and-release/commit/ae11062d129df85a0273f859acf3d4bc72101a31))
+
+
+
 # [2.4.0](https://github.com/aversini/bump-and-release/compare/v2.3.1...v2.4.0) (2022-02-21)
 
 
