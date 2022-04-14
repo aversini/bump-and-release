@@ -11,7 +11,7 @@ const {
   shouldContinue,
 } = require("./utilities");
 
-const runReleaseTasks = async (commands) => {
+const runReleaseTasks = async (commands, version) => {
   let error = false;
   const spinner = new Spinner("Starting release tasks...");
 
@@ -36,7 +36,7 @@ const runReleaseTasks = async (commands) => {
             await runCommand(command.action);
           }
         } else if (typeof command.action === "function") {
-          await command.action();
+          await command.action(version);
         }
       }
     } catch (e) {
@@ -72,5 +72,5 @@ module.exports = async (config) => {
   const goodToGo = await displayConfirmation(`About to ${instruction}`);
 
   shouldContinue(goodToGo);
-  runReleaseTasks(commands);
+  await runReleaseTasks(commands, version);
 };
