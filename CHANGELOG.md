@@ -1,3 +1,12 @@
+# [2.5.0](https://github.com/aversini/bump-and-release/compare/v2.4.1...v2.5.0) (2022-04-14)
+
+
+### Features
+
+* adding version to custom commands in release ([8c0378f](https://github.com/aversini/bump-and-release/commit/8c0378f5525279a447855c83a1a5bc228b3c9247))
+
+
+
 ## [2.4.1](https://github.com/aversini/bump-and-release/compare/v2.4.0...v2.4.1) (2022-02-21)
 
 

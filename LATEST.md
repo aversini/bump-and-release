@@ -1,5 +1,5 @@
 
-### Bug Fixes
+### Features
 
-* forgot to pass newversion to prebump action if function ([ae11062](https://github.com/aversini/bump-and-release/commit/ae11062d129df85a0273f859acf3d4bc72101a31))
+* adding version to custom commands in release ([8c0378f](https://github.com/aversini/bump-and-release/commit/8c0378f5525279a447855c83a1a5bc228b3c9247))
 
