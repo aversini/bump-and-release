@@ -103,6 +103,12 @@ While the defaults are pretty straight forward, it is possible to override them 
 module.exports = {
   /**
    * { array of strings }
+   * List of all the branches this tool is NOT allowed to work with.
+   * This entry takes precedence over the next one (allowedBranches).
+   */
+  disallowedBranches: [],
+  /**
+   * { array of strings }
    * List of all the branches this tool is allowed to work with.
    */
   allowedBranches: ["master", "main"],
@@ -111,6 +117,7 @@ module.exports = {
    * List of all the remotes this tool is allowed to work with.
    */
   allowedRemotes: ["github/master", "upstream/main"],
+
   /**
    * Configurations specific to the "bump" command.
    */

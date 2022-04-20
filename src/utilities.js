@@ -166,7 +166,11 @@ const preflightValidation = async (config) => {
 
   const errorMessage = [];
 
-  if (!config.allowedBranches.includes(branch)) {
+  if (config.disallowedBranches.includes(branch)) {
+    errorMessage.push(
+      `Working branch cannot be one of "${config.disallowedBranches}".`
+    );
+  } else if (!config.allowedBranches.includes(branch)) {
     errorMessage.push(
       `Working branch must be one of "${config.allowedBranches}".`
     );

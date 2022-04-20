@@ -41,6 +41,7 @@ describe("when testing for individual utilities wtih no logging side-effects", (
       bump: {
         local: true,
       },
+      disallowedBranches: [],
     });
     expect(branch).toBe("master");
     expect(remote).toBe("github/master");
@@ -627,13 +628,14 @@ Current tracking remote is github`;
     expect(res).toBe(true);
   });
 
-  it("should run preflight with errors for branch/remote", async () => {
+  it("should run preflight with errors for allowed branch/remote", async () => {
     const config = {
       allowedBranches: ["maaaaster"],
       allowedRemotes: ["github/maaaaster"],
       bump: {
         local: true,
       },
+      disallowedBranches: [],
     };
     const { branch, remote, version } = await preflightValidation(config);
     expect(branch).toBe("master");
@@ -645,6 +647,25 @@ Current tracking remote is github`;
     );
     expect(mockLogError).toHaveBeenCalledWith(
       'Tracking remote must be one of "github/maaaaster".'
+    );
+  });
+
+  it("should run preflight with errors for disallowed branch", async () => {
+    const config = {
+      allowedBranches: [],
+      allowedRemotes: ["github/master"],
+      bump: {
+        local: true,
+      },
+      disallowedBranches: ["master"],
+    };
+    const { branch, remote, version } = await preflightValidation(config);
+    expect(branch).toBe("master");
+    expect(remote).toBe("github/master");
+    expect(version).toBe(currentVersion);
+
+    expect(mockLogError).toHaveBeenCalledWith(
+      'Working branch cannot be one of "master".'
     );
   });
 

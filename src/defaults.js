@@ -29,6 +29,7 @@ module.exports = {
     ],
     prebump: [],
   },
+  disallowedBranches: [],
   release: {
     commitMessage: (version) => `chore: tagging release ${version}`,
     local: false,
