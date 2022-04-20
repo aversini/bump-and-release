@@ -1,5 +1,5 @@
 
 ### Features
 
-* adding version to custom commands in release ([8c0378f](https://github.com/aversini/bump-and-release/commit/8c0378f5525279a447855c83a1a5bc228b3c9247))
+* adding support for "disallowedBranches" ([66b150d](https://github.com/aversini/bump-and-release/commit/66b150d3b9fe9820f0f12666483cc131a04fe6f3))
 

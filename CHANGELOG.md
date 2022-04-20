@@ -1,3 +1,12 @@
+# [2.6.0](https://github.com/aversini/bump-and-release/compare/v2.5.0...v2.6.0) (2022-04-20)
+
+
+### Features
+
+* adding support for "disallowedBranches" ([66b150d](https://github.com/aversini/bump-and-release/commit/66b150d3b9fe9820f0f12666483cc131a04fe6f3))
+
+
+
 # [2.5.0](https://github.com/aversini/bump-and-release/compare/v2.4.1...v2.5.0) (2022-04-14)
 
 
