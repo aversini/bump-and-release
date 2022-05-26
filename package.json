@@ -1,6 +1,6 @@
 {
   "name": "bump-and-release",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "license": "MIT",
   "author": "Arno Versini",
   "description": "A tiny command line helper to bump and release packages",
