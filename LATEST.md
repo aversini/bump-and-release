@@ -1,5 +1,5 @@
 
 ### Features
 
-* adding support for "disallowedBranches" ([66b150d](https://github.com/aversini/bump-and-release/commit/66b150d3b9fe9820f0f12666483cc131a04fe6f3))
+* ignore branch and remote restriction if local is true ([6e98a65](https://github.com/aversini/bump-and-release/commit/6e98a654b18570a4ba83a4afdf57f3ed41216d5b))
 
