@@ -144,7 +144,7 @@ const getPackagesLocation = async (config) => {
   return [];
 };
 
-const preflightValidation = async (config) => {
+const preflightValidation = async (config, local) => {
   /*
    * Check if the current branch is allowed
    * Check if the current branch has a tracking remote
@@ -164,31 +164,31 @@ const preflightValidation = async (config) => {
   /* istanbul ignore next */
   const packages = config.bump.lerna ? await getPackagesLocation(config) : [];
 
-  const errorMessage = [];
+  if (!local) {
+    const errorMessage = [];
+    if (config.disallowedBranches.includes(branch)) {
+      errorMessage.push(
+        `Working branch cannot be one of "${config.disallowedBranches}".`
+      );
+    } else if (!config.allowedBranches.includes(branch)) {
+      errorMessage.push(
+        `Working branch must be one of "${config.allowedBranches}".`
+      );
+    }
 
-  if (config.disallowedBranches.includes(branch)) {
-    errorMessage.push(
-      `Working branch cannot be one of "${config.disallowedBranches}".`
-    );
-  } else if (!config.allowedBranches.includes(branch)) {
-    errorMessage.push(
-      `Working branch must be one of "${config.allowedBranches}".`
-    );
+    if (!config.allowedRemotes.includes(remote)) {
+      errorMessage.push(
+        `Tracking remote must be one of "${config.allowedRemotes}".`
+      );
+    }
+    /* istanbul ignore next */
+    if (dirty.exitCode > 0) {
+      errorMessage.push(
+        `Working dir must be clean (no uncommited files).\n${dirty.shortMessage}`
+      );
+    }
+    errorMessage.length && displayErrorMessages(errorMessage);
   }
-
-  if (!config.allowedRemotes.includes(remote)) {
-    errorMessage.push(
-      `Tracking remote must be one of "${config.allowedRemotes}".`
-    );
-  }
-  /* istanbul ignore next */
-  if (dirty.exitCode > 0 && !config.bump.local && !config.release.local) {
-    errorMessage.push(
-      `Working dir must be clean (no uncommited files).\n${dirty.shortMessage}`
-    );
-  }
-
-  displayErrorMessages(errorMessage);
 
   return {
     branch,

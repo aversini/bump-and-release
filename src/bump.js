@@ -206,7 +206,8 @@ module.exports = async (config, next) => {
     }
   } else {
     const { branch, remote, version, packages } = await preflightValidation(
-      config
+      config,
+      config.bump.local
     );
 
     displayIntroductionMessage({ branch, remote, version });

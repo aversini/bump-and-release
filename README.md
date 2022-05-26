@@ -105,16 +105,19 @@ module.exports = {
    * { array of strings }
    * List of all the branches this tool is NOT allowed to work with.
    * This entry takes precedence over the next one (allowedBranches).
+   * This is ignored if bump.local or release.local is true.
    */
   disallowedBranches: [],
   /**
    * { array of strings }
    * List of all the branches this tool is allowed to work with.
+   * This is ignored if bump.local or release.local is true.
    */
   allowedBranches: ["master", "main"],
   /**
    * { array of strings }
    * List of all the remotes this tool is allowed to work with.
+   * This is ignored if bump.local or release.local is true.
    */
   allowedRemotes: ["github/master", "upstream/main"],
 

@@ -35,14 +35,17 @@ describe("when testing for individual utilities wtih no logging side-effects", (
   });
 
   it("should run preflight with no errors and return the valid branch/remote/version", async () => {
-    const { branch, remote, version } = await preflightValidation({
-      allowedBranches: ["master"],
-      allowedRemotes: ["github/master"],
-      bump: {
-        local: true,
+    const { branch, remote, version } = await preflightValidation(
+      {
+        allowedBranches: ["master"],
+        allowedRemotes: ["github/master"],
+        bump: {
+          local: true,
+        },
+        disallowedBranches: [],
       },
-      disallowedBranches: [],
-    });
+      true
+    );
     expect(branch).toBe("master");
     expect(remote).toBe("github/master");
     expect(version).toBe(currentVersion);
