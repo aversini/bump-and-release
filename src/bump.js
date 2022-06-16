@@ -31,7 +31,17 @@ const updatePackageLockJSON = async (version) => {
     let packageLockJson;
     try {
       packageLockJson = await fs.readJSON(pkgLock);
+      const name = packageLockJson.name;
       packageLockJson.version = version;
+      if (
+        packageLockJson.lockfileVersion > 1 &&
+        packageLockJson.packages &&
+        packageLockJson.packages[""] &&
+        packageLockJson.packages[""].version &&
+        packageLockJson.packages[""].name === name
+      ) {
+        packageLockJson.packages[""].version = version;
+      }
       await fs.writeJSON(pkgLock, packageLockJson, {
         spaces: 2,
       });
@@ -210,7 +220,12 @@ module.exports = async (config, next) => {
       config.bump.local
     );
 
-    displayIntroductionMessage({ branch, remote, version });
+    displayIntroductionMessage({
+      branch,
+      local: config.bump.local,
+      remote,
+      version,
+    });
 
     const newVersion = await promptForBumpType({ config, current: version });
     const { instruction, commands } = prepareBumpTasks(config, newVersion);
