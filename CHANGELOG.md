@@ -1,3 +1,12 @@
+## [2.7.1](https://github.com/aversini/bump-and-release/compare/v2.7.0...v2.7.1) (2022-06-16)
+
+
+### Bug Fixes
+
+* if lockfileVersion > 1 updated version in lock file is incomplete ([52a62d7](https://github.com/aversini/bump-and-release/commit/52a62d72fb3290a2d9c77bde33b510a64018e369))
+
+
+
 # [2.7.0](https://github.com/aversini/bump-and-release/compare/v2.6.0...v2.7.0) (2022-05-26)
 
 
