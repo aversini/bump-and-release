@@ -1,3 +1,12 @@
+## [3.0.5](https://github.com/aversini/bump-and-release/compare/v3.0.4...v3.0.5) (2023-05-05)
+
+
+### Bug Fixes
+
+* OMG ([039e880](https://github.com/aversini/bump-and-release/commit/039e88062e18b960a6064e0677e4cf1315491c13))
+
+
+
 ## [3.0.4](https://github.com/aversini/bump-and-release/compare/v3.0.3...v3.0.4) (2023-05-05)
 
 

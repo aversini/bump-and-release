@@ -1,5 +1,5 @@
 
 ### Bug Fixes
 
-* still battling with the doggie ([a5acd31](https://github.com/aversini/bump-and-release/commit/a5acd3183c322845f52ee758e387cd1b40f4d7c1))
+* OMG ([039e880](https://github.com/aversini/bump-and-release/commit/039e88062e18b960a6064e0677e4cf1315491c13))
 
