@@ -1,3 +1,12 @@
+## [3.0.4](https://github.com/aversini/bump-and-release/compare/v3.0.3...v3.0.4) (2023-05-05)
+
+
+### Bug Fixes
+
+* still battling with the doggie ([a5acd31](https://github.com/aversini/bump-and-release/commit/a5acd3183c322845f52ee758e387cd1b40f4d7c1))
+
+
+
 ## [3.0.3](https://github.com/aversini/bump-and-release/compare/v3.0.2...v3.0.3) (2023-05-05)
 
 
