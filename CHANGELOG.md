@@ -1,3 +1,12 @@
+## [3.0.2](https://github.com/aversini/bump-and-release/compare/v3.0.1...v3.0.2) (2023-05-05)
+
+
+### Bug Fixes
+
+* still trying to bypass husky on publish ([2db0e2e](https://github.com/aversini/bump-and-release/commit/2db0e2e5cf0c12c05569b9c2db7c5596d2e6f8e0))
+
+
+
 ## [3.0.1](https://github.com/aversini/bump-and-release/compare/v3.0.0...v3.0.1) (2023-05-05)
 
 

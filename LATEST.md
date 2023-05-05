@@ -1,5 +1,5 @@
 
 ### Bug Fixes
 
-* update husky and prettier to latest ([f5cc863](https://github.com/aversini/bump-and-release/commit/f5cc863b7165d1a4c53fbaef61267cad330ef959))
+* still trying to bypass husky on publish ([2db0e2e](https://github.com/aversini/bump-and-release/commit/2db0e2e5cf0c12c05569b9c2db7c5596d2e6f8e0))
 
