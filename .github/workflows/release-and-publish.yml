@@ -53,7 +53,7 @@ jobs:
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org/
-      - run: npm publish --no-verify
+      - run: npm publish --no-verify --ignore-scripts
         env:
           HUSKY: 0
           NODE_AUTH_TOKEN: ${{secrets.npm_publish_token}}
