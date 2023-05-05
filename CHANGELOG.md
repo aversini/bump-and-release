@@ -1,5 +1,8 @@
 # [3.0.0](https://github.com/aversini/bump-and-release/compare/v2.7.1...v3.0.0) (2023-05-05)
 
+### Breaking Changes
+
+* Updating dependencies and dropping support for Node v14 and lower.
 
 
 ## [2.7.1](https://github.com/aversini/bump-and-release/compare/v2.7.0...v2.7.1) (2022-06-16)
