@@ -1,5 +1,5 @@
 
 ### Bug Fixes
 
-* still trying to bypass husky on publish ([2db0e2e](https://github.com/aversini/bump-and-release/commit/2db0e2e5cf0c12c05569b9c2db7c5596d2e6f8e0))
+* still working on husky ([8623296](https://github.com/aversini/bump-and-release/commit/8623296ed41d265abb1406f82c3e0a40150d34af))
 
