@@ -55,4 +55,5 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm publish
         env:
+          HUSKY: 0
           NODE_AUTH_TOKEN: ${{secrets.npm_publish_token}}

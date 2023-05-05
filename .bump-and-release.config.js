@@ -1,5 +1,6 @@
 module.exports = {
   bump: {
+    local: true,
     nextPossible: [
       {
         pos: 0,
